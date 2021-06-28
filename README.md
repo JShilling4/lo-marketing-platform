@@ -1,4 +1,4 @@
-# marketing-frontend
+# loanOfficer-marketing-platform
 
 ## Project setup
 ```
