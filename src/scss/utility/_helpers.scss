@@ -1,0 +1,114 @@
+// HELPER overrides (for dynamic styling use !important)
+.adminFlag {
+    color: $red;
+    font-weight: 500;
+}
+
+.tooltipLabel {
+    position: relative;
+}
+
+span.--uploadEmpty {
+    color: $gray !important;
+    text-decoration: none !important;
+}
+
+.status {
+    padding: 0.35rem 1.5rem 0.35rem;
+    color: #fff;
+    border-radius: 32rem;
+    font-weight: 600;
+}
+.In_Progress,
+.Busy,
+.Draft {
+    background-color: $inProgress;
+    &--text {
+        background-color: transparent;
+        color: $inProgress;
+    }
+}
+.Needs_Information {
+    background-color: $needsInformation;
+    &--text {
+        background-color: transparent;
+        color: $needsInformation;
+    }
+}
+.Approved,
+.Sent,
+.Invoiced {
+    background-color: $approvedGreen;
+    &--text {
+        background-color: transparent;
+        color: $approvedGreen;
+    }
+}
+.Assigned {
+    background-color: $assigned;
+    &--text {
+        background-color: transparent;
+        color: $assigned;
+    }
+}
+.Needs_Revision {
+    background-color: $needsRevision;
+    &--text {
+        background-color: transparent;
+        color: $needsRevision;
+    }
+}
+.Needs_Approval,
+.Inactive {
+    background-color: $needsApproval;
+    &--text {
+        background-color: transparent;
+        color: $needsApproval;
+    }
+}
+.Delayed {
+    background-color: $delayed;
+    &--text {
+        background-color: transparent;
+        color: $delayed;
+    }
+}
+.Ordered {
+    background-color: $ordered;
+    &--text {
+        background-color: transparent;
+        color: $ordered;
+    }
+}
+.Needs_Ordered {
+    background-color: $needsOrdered;
+    &--text {
+        background-color: transparent;
+        color: $needsOrdered;
+    }
+}
+.Completed,
+.Active {
+    background-color: $teal-light;
+    &--text {
+        background-color: transparent;
+        color: $teal-light;
+    }
+}
+.Scheduled {
+    background-color: $blue-dark;
+    &--text {
+        background-color: transparent;
+        color: $blue-dark;
+    }
+}
+.Away {
+    background-color: $gray;
+    &--text {
+        background-color: transparent;
+        color: $gray;
+    }
+}
+.Commented {
+    background-color: $purple-dark;
+}

@@ -1,0 +1,20 @@
+.search {
+  position: relative;
+  input {
+    width: 25rem;
+    height: 2.6rem;
+    padding: 0.5rem 0.5rem 0.5rem 2.8rem;
+    border-radius: 5rem;
+    border: 1px solid $gray;
+    &:focus,
+    &:active {
+      outline: none;
+    }
+  }
+  .fa-search {
+    position: absolute;
+    top: 0.6rem;
+    left: 0.75rem;
+    color: $gray;
+  }
+}

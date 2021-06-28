@@ -1,0 +1,43 @@
+// color variables
+$gray: #b8b8b8;
+$gray-light: #cfcfcf;
+$gray-mid: #9c9c9c;
+$gray-dark: #616161;
+$teal-light: #16af8c;
+$teal-dark: #0f8c73;
+$blue-green: #08485c;
+$blue-dark: #142f42;
+$purple: #a760e5;
+$purple-dark: #621ba5;
+$approvedGreen: #00b84f;
+$pink: #e560dd;
+$gold: #f4c02f;
+$orange: #f38e36;
+$turquoise: #16d6c6;
+$red: #e83953;
+$linkBlue: #0aa1ee;
+$brightBlue: #0062ff;
+$linkBlue-faded: rgba(10, 162, 238, 0.609);
+
+$completed: $teal-light;
+$commented: $purple-dark;
+$approved: $approvedGreen;
+$needsInformation: $purple;
+$delayed: $pink;
+$ordered: $gold;
+$needsOrdered: $turquoise;
+$inProgress: $orange;
+$needsApproval: $red;
+$assigned: $linkBlue;
+$needsRevision: $brightBlue;
+
+// effects variables
+$dropdownShadow: 0 1.5rem 3rem rgba(73, 73, 73, 0.3);
+$containerShadow: 0 1rem 2rem rgba(73, 73, 73, 0.3);
+$slideShadow: 0 0.5rem 1rem rgba(73, 73, 73, 0.5);
+
+// box model variables
+$standard-view: 4rem 12rem 10rem;
+$prodCard-width: 275px;
+$prodCard-height: 275px;
+$prodCardContainer-width: 310px;

@@ -1,0 +1,46 @@
+// Global table
+.VGT-row:hover {
+    background-color: rgba(22, 175, 139, 0.048);
+    cursor: pointer;
+}
+.vgt-table {
+    .emptyState {
+        display: block;
+        text-align: center;
+        color: $gray;
+    }
+    th.sorting {
+        color: #333 !important;
+    }
+    .tableIcon {
+        filter: grayscale(1);
+        cursor: pointer;
+        &:hover {
+            filter: grayscale(0);
+        }
+        &--edit {
+            height: 21px;
+        }
+        &--duplicate {
+            height: 24px;
+        }
+    }
+    .tableHeader {
+        display: block;
+        cursor: pointer;
+        &.--active {
+            color: #333;
+        }
+    }
+}
+
+.num-left-align {
+    text-align: left !important;
+}
+.status {
+    text-align: center;
+    &--orders {
+        display: inline-block;
+        min-width: 16rem;
+    }
+}
