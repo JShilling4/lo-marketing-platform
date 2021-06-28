@@ -6,15 +6,6 @@ import LoginPage from "@/views/LoginPage";
 import CatalogLogin from "@/views/catalog/CatalogLogin";
 // shared routes
 import MobileHandoff from "@/views/MobileHandoff";
-// import DiscoverPage from '@/views/DiscoverPage';
-// const Testimonials = () => import(/* webpackChunkName: "testimonials" */'@/views/TestimonialsPage');
-
-// this silences the uncaught (in promise) undefined console error when redirecting inside nav guard
-// const originalPush = Router.prototype.push;
-// Router.prototype.push = function push(location, onResolve, onReject) {
-//     if (onResolve || onReject) return originalPush.call(this, location, onResolve, onReject);
-//     return originalPush.call(this, location).catch(err => err);
-// };
 
 // ROUTER & ROUTE CONFIG
 const router = new Router({
