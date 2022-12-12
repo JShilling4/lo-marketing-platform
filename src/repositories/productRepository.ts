@@ -1,6 +1,7 @@
 import { graphql, rest } from "./clients";
+import type { IProductRepository } from "@/types/repositories/productRepository";
 
-export const productRepository = {
+export const productRepository: IProductRepository = {
   getAll() {
     return graphql.post("/graphql", {
       query: `{
@@ -67,7 +68,7 @@ export const productRepository = {
     });
   },
 
-  get(id: any) {
+  get(id) {
     return graphql.post("/graphql", {
       query: `{
         marketingV1GetProduct(id: "${id}"){
@@ -133,11 +134,11 @@ export const productRepository = {
     });
   },
 
-  post(data: any) {
-    return rest.post("/v1/manageProduct", data);
+  post(payload) {
+    return rest.post("/v1/manageProduct", payload);
   },
 
-  bulkPost(data: any) {
-    return rest.post("/v1/manageBulkProducts", data);
+  bulkPost(payload) {
+    return rest.post("/v1/manageBulkProducts", payload);
   },
 };
