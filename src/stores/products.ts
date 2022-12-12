@@ -1,11 +1,11 @@
+import type { IProduct } from "@/types/product";
 import { defineStore } from "pinia";
 import { productRepository } from "../repositories/productRepository";
 
 export const useProductsStore = defineStore("products", {
   state: () => {
     return {
-      products: [] as any,
-      productReviews: [] as any,
+      products: [] as IProduct[],
     };
   },
 
@@ -18,7 +18,7 @@ export const useProductsStore = defineStore("products", {
       // Vue.toasted.success('Products data refreshed!');
     },
 
-    async getProduct(id: any) {
+    async getProduct(id: string) {
       const { data } = await productRepository.get(id);
       if (!data) return;
       if (data.marketingV1GetProduct.length > 0) {
@@ -35,7 +35,7 @@ export const useProductsStore = defineStore("products", {
       }
     },
 
-    async postProduct(payload: any) {
+    async postProduct(payload) {
       const { data } = await productRepository.post(payload);
       if (!data) return;
 
@@ -53,7 +53,7 @@ export const useProductsStore = defineStore("products", {
       }
     },
 
-    async bulkPostProducts(payload: any) {
+    async bulkPostProducts(payload) {
       const { data } = await productRepository.bulkPost(payload);
       if (!data) return;
 
@@ -77,18 +77,18 @@ export const useProductsStore = defineStore("products", {
   },
 
   getters: {
-    productById: (state) => (id: any) =>
-      state.products.find((product: any) => product.id == id),
+    productById: (state) => (id: string) =>
+      state.products.find((product) => product.id == id),
 
     allProducts: (state) => state.products,
 
     allActiveProducts: (state) =>
-      state.products.filter((product: any) => product.isActive === 1),
+      state.products.filter((product) => product.isActive === true),
 
-    allDiscoverProducts: (state) =>
-      state.products.filter((product: any) => product.displayDiscover === 1),
+    allDiscoverProducts: (state): IProduct[] =>
+      state.products.filter((product) => product.displayDiscover === true),
 
-    allCatalogProducts: (state) =>
-      state.products.filter((product: any) => product.displayRealtor === 1),
+    allCatalogProducts: (state): IProduct[] =>
+      state.products.filter((product) => product.displayRealtor === true),
   },
 });

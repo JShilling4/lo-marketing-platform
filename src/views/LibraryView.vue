@@ -139,7 +139,7 @@
           class="cardContainer"
         >
           <router-link
-            :to="{ path: `/product/${product.id}`, query: { ...$route.query } }"
+            :to="{ path: `/product/${product.id}`, query: { ...route.query } }"
           >
             <!-- <product-card :details="product">
               <slot>
@@ -176,24 +176,26 @@
 import { onMounted, ref } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useProductsStore } from "../stores/products";
+import type { IProduct } from "../types/product";
 // import infiniteScroll from "vue-infinite-scroll";
 // Vue.use(infiniteScroll);
 
 const router = useRouter();
 const route = useRoute();
+
 const productStore = useProductsStore();
 
-const filteredProducts = ref([]);
+const filteredProducts = ref<IProduct[]>([]);
 const selectedCategories = ref<any>([]);
 const selectedTopics = ref<any>([]);
-const searchString = ref("");
-const scrollerData = ref<any>([]);
-const scrollSliceStart = ref(0);
-const scrollSliceIncrement = ref(10);
-const scrollerIsBusy = ref(false);
-const cardsAreLoading = ref(false);
-const sortOptions = ref(["A-Z", "Z-A", "Most Popular"]);
-const selectedSort = ref("A-Z");
+const searchString = ref<string>("");
+const scrollerData = ref<IProduct[]>([]);
+const scrollSliceStart = ref<number>(0);
+const scrollSliceIncrement = ref<number>(10);
+const scrollerIsBusy = ref<boolean>(false);
+const cardsAreLoading = ref<boolean>(false);
+const sortOptions = ref<string[]>(["A-Z", "Z-A", "Most Popular"]);
+const selectedSort = ref<string>("A-Z");
 
 function filterProducts() {
   scrollerData.value = []; // reset the virtual scroller
@@ -202,9 +204,8 @@ function filterProducts() {
   ); // reset to starting dataset
   // check for category matches (inclusive)
   if (selectedCategories.value.length > 0) {
-    filteredProducts.value = productStore.allActiveProducts.filter(
-      (prod: any) =>
-        selectedCategories.value.some((sc: any) => sc.id == prod.category.id)
+    filteredProducts.value = productStore.allActiveProducts.filter((prod) =>
+      selectedCategories.value.some((sc: any) => sc.id == prod.category.id)
     );
   }
   // check for topic matches (exclusive)
@@ -256,7 +257,7 @@ function categorySelected() {
   filterProducts();
 }
 
-function removeCategory(index: any) {
+function removeCategory(index: number) {
   selectedCategories.value.splice(index, 1);
   appendCategoryQueryString();
   filterProducts();
@@ -272,7 +273,7 @@ function appendTopicQueryString() {
   });
 }
 
-function goToReviews(e: any, productId: any) {
+function goToReviews(e: Event, productId: string) {
   e.stopPropagation();
   e.preventDefault();
   router.push(`/product/${productId}/reviews`);
@@ -283,7 +284,7 @@ function topicSelected() {
   filterProducts();
 }
 
-function removeTopic(index: any) {
+function removeTopic(index: number) {
   selectedTopics.value.splice(index, 1);
   appendTopicQueryString();
   filterProducts();
