@@ -1,0 +1,114 @@
+// HELPER overrides (for dynamic styling use !important)
+.adminFlag {
+  color: var(--red);
+  font-weight: 500;
+}
+
+.tooltipLabel {
+  position: relative;
+}
+
+span.--uploadEmpty {
+  color: var(--gray !important);
+  text-decoration: none !important;
+}
+
+.status {
+  padding: 0.35rem 1.5rem 0.35rem;
+  color: #fff;
+  border-radius: 32rem;
+  font-weight: 600;
+}
+.In_Progress,
+.Busy,
+.Draft {
+  background-color: var(--inProgress);
+  &--text {
+    background-color: transparent;
+    color: var(--inProgress);
+  }
+}
+.Needs_Information {
+  background-color: var(--needsInformation);
+  &--text {
+    background-color: transparent;
+    color: var(--needsInformation);
+  }
+}
+.Approved,
+.Sent,
+.Invoiced {
+  background-color: var(--approvedGreen);
+  &--text {
+    background-color: transparent;
+    color: var(--approvedGreen);
+  }
+}
+.Assigned {
+  background-color: var(--assigned);
+  &--text {
+    background-color: transparent;
+    color: var(--assigned);
+  }
+}
+.Needs_Revision {
+  background-color: var(--needsRevision);
+  &--text {
+    background-color: transparent;
+    color: var(--needsRevision);
+  }
+}
+.Needs_Approval,
+.Inactive {
+  background-color: var(--needsApproval);
+  &--text {
+    background-color: transparent;
+    color: var(--needsApproval);
+  }
+}
+.Delayed {
+  background-color: var(--delayed);
+  &--text {
+    background-color: transparent;
+    color: var(--delayed);
+  }
+}
+.Ordered {
+  background-color: var(--ordered);
+  &--text {
+    background-color: transparent;
+    color: var(--ordered);
+  }
+}
+.Needs_Ordered {
+  background-color: var(--needsOrdered);
+  &--text {
+    background-color: transparent;
+    color: var(--needsOrdered);
+  }
+}
+.Completed,
+.Active {
+  background-color: var(--teal-light);
+  &--text {
+    background-color: transparent;
+    color: var(--teal-light);
+  }
+}
+.Scheduled {
+  background-color: var(--blue-dark);
+  &--text {
+    background-color: transparent;
+    color: var(--blue-dark);
+  }
+}
+.Away {
+  background-color: var(--gray);
+  &--text {
+    background-color: transparent;
+    color: var(--gray);
+  }
+}
+.Commented {
+  background-color: var(--purple-dark);
+}
