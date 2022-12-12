@@ -175,14 +175,14 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { useRouter, useRoute } from "vue-router";
+import { useProductsStore } from "../stores/products";
 // import infiniteScroll from "vue-infinite-scroll";
-// import { mapState, mapGetters, mapActions } from "vuex";
 // Vue.use(infiniteScroll);
 
 const router = useRouter();
 const route = useRoute();
+const productStore = useProductsStore();
 
-const productList = ref([]);
 const filteredProducts = ref([]);
 const selectedCategories = ref<any>([]);
 const selectedTopics = ref<any>([]);
@@ -194,19 +194,17 @@ const scrollerIsBusy = ref(false);
 const cardsAreLoading = ref(false);
 const sortOptions = ref(["A-Z", "Z-A", "Most Popular"]);
 const selectedSort = ref("A-Z");
-// computed: {
-//   ...mapState(["products"]),
-//   ...mapGetters(["allCategories", "allTopics", "allActiveProducts"]),
-// },
-// methods: {
-//   ...mapActions(["fetchCategoriesTopics", "updateProducts"]),
+
 function filterProducts() {
   scrollerData.value = []; // reset the virtual scroller
-  filteredProducts.value = JSON.parse(JSON.stringify([...allActiveProducts])); // reset to starting dataset
+  filteredProducts.value = JSON.parse(
+    JSON.stringify([...productStore.allActiveProducts])
+  ); // reset to starting dataset
   // check for category matches (inclusive)
   if (selectedCategories.value.length > 0) {
-    filteredProducts.value = allActiveProducts.filter((prod: any) =>
-      selectedCategories.value.some((sc: any) => sc.id == prod.category.id)
+    filteredProducts.value = productStore.allActiveProducts.filter(
+      (prod: any) =>
+        selectedCategories.value.some((sc: any) => sc.id == prod.category.id)
     );
   }
   // check for topic matches (exclusive)
@@ -354,9 +352,10 @@ onMounted(async () => {
   const queryStringPresent = queryCategories || queryTopics || querySearch;
   cardsAreLoading.value = true;
   fetchCategoriesTopics();
+
   // show products immediately if they exist in store
-  if (allActiveProducts.length > 0) {
-    filteredProducts.value = allActiveProducts.filter(
+  if (productStore.allActiveProducts.length > 0) {
+    filteredProducts.value = productStore.allActiveProducts.filter(
       (product: any) => product.isActive == 1
     );
     if (!queryStringPresent) {
@@ -365,8 +364,10 @@ onMounted(async () => {
       filterByQueryString(queryCategories, queryTopics, querySearch);
     }
   }
+
   // if products were not in store, render the cards after store is populated
-  await updateProducts();
+  await productStore.getAllProducts();
+
   if (!queryStringPresent) {
     filterProducts();
     // set up virtual scroller
@@ -376,13 +377,14 @@ onMounted(async () => {
   } else {
     filterByQueryString(queryCategories, queryTopics, querySearch);
   }
+
   cardsAreLoading.value = false;
 });
 </script>
 
 <style lang="scss" scoped>
 .library {
-  padding: $standard-view;
+  padding: var(--standard-view);
   @include breakpoint(desktop) {
     padding: 4rem 4rem 10rem;
   }
@@ -402,11 +404,11 @@ onMounted(async () => {
     flex-wrap: wrap;
   }
   .fa-tag {
-    color: $gray;
+    color: var(--gray);
     margin-right: 0.5rem;
   }
   .noTagsText {
-    color: $gray;
+    color: var(--gray);
     font-size: 12px;
     font-weight: 600;
     margin-left: 1rem;
@@ -432,13 +434,13 @@ onMounted(async () => {
     width: 17rem;
     margin-right: 1rem;
     label {
-      color: $orange;
+      color: var(--orange);
     }
     ::v-deep .multiselect__content-wrapper {
       width: 17rem;
     }
     ::v-deep .multiselect__single {
-      color: $orange;
+      color: var(--orange);
       font-weight: 800;
     }
   }
@@ -465,7 +467,7 @@ onMounted(async () => {
       height: 2.6rem;
       padding: 0.5rem 0.5rem 0.25rem 2.8rem;
       border-radius: 5rem;
-      border: 1px solid $gray;
+      border: 1px solid var(--gray);
       @include breakpoint(desktop) {
         width: 22rem;
       }
@@ -481,7 +483,7 @@ onMounted(async () => {
       position: absolute;
       top: 0.6rem;
       left: 0.75rem;
-      color: $gray;
+      color: var(--gray);
     }
   }
   .sortControl {
@@ -492,7 +494,7 @@ onMounted(async () => {
   }
 }
 .cardContainer {
-  width: $prodCardContainer-width;
+  width: var(--prodCardContainer-width);
   margin: 0 auto;
 }
 .cardRow {
@@ -501,7 +503,7 @@ onMounted(async () => {
   margin-top: 5rem;
   padding: 0 4px;
   .categoryLabel {
-    color: $gray;
+    color: var(--gray);
     margin-top: 0.25rem;
     font-size: 1.4rem;
   }
@@ -517,7 +519,7 @@ onMounted(async () => {
   }
 }
 .emptyRowFiller {
-  width: $prodCardContainer-width;
+  width: var(--prodCardContainer-width);
   height: 0;
   margin: 0 auto;
 }
