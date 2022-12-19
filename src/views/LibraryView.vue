@@ -1,3 +1,219 @@
+<script setup lang="ts">
+import { onMounted, ref } from "vue";
+import { useRouter, useRoute } from "vue-router";
+import { useProductsStore } from "../stores/products";
+import { useCategoryStore } from "../stores/categories";
+import { useTopicStore } from "../stores/topics";
+import type { Product } from "../types/product";
+// import infiniteScroll from "vue-infinite-scroll";
+// Vue.use(infiniteScroll);
+
+const router = useRouter();
+const route = useRoute();
+
+const productStore = useProductsStore();
+const categoryStore = useCategoryStore();
+const topicStore = useTopicStore();
+
+const filteredProducts = ref<Product[]>([]);
+const selectedCategories = ref<any>([]);
+const selectedTopics = ref<any>([]);
+const searchString = ref<string>("");
+const scrollerData = ref<Product[]>([]);
+const scrollSliceStart = ref<number>(0);
+const scrollSliceIncrement = ref<number>(10);
+const scrollerIsBusy = ref<boolean>(false);
+const cardsAreLoading = ref<boolean>(false);
+const sortOptions = ref<string[]>(["A-Z", "Z-A", "Most Popular"]);
+const selectedSort = ref<string>("A-Z");
+
+function filterProducts() {
+  scrollerData.value = []; // reset the virtual scroller
+  filteredProducts.value = JSON.parse(
+    JSON.stringify([...productStore.allActiveProducts])
+  ); // reset to starting dataset
+  // check for category matches (inclusive)
+  if (selectedCategories.value.length > 0) {
+    filteredProducts.value = productStore.allActiveProducts.filter((prod) =>
+      selectedCategories.value.some((sc: any) => sc.id == prod.category.id)
+    );
+  }
+  // check for topic matches (exclusive)
+  if (selectedTopics.value.length > 0) {
+    const topicIdArray = selectedTopics.value.map((topic: any) => topic.name);
+    filteredProducts.value = filteredProducts.value.filter((prod: any) =>
+      topicIdArray.every((name: any) =>
+        prod.topics.some((topic: any) => topic.name == name)
+      )
+    );
+  }
+  if (searchString.value !== "") {
+    filteredProducts.value = filteredProducts.value.filter(
+      (prod: any) =>
+        prod.name.toLowerCase().includes(searchString.value.toLowerCase()) ||
+        prod.description
+          .toLowerCase()
+          .includes(searchString.value.toLowerCase())
+    );
+  }
+  if (selectedSort.value == "Z-A") {
+    filteredProducts.value.reverse();
+  } else if (selectedSort.value == "Most Popular") {
+    filteredProducts.value = filteredProducts.value.sort((a: any, b: any) => {
+      if (a.rating == b.rating) {
+        return a.name > b.name ? 1 : -1;
+      }
+      return b.rating > a.rating ? 1 : -1;
+    });
+  }
+  scrollSliceStart.value = 0;
+  loadMoreCards();
+}
+
+function appendCategoryQueryString() {
+  router.replace({
+    name: "library",
+    query: {
+      ...route.query,
+      categories: selectedCategories.value
+        .map((category: any) => category.name)
+        .join(","),
+    },
+  });
+}
+
+function categorySelected() {
+  appendCategoryQueryString();
+  filterProducts();
+}
+
+function removeCategory(index: number) {
+  selectedCategories.value.splice(index, 1);
+  appendCategoryQueryString();
+  filterProducts();
+}
+
+function appendTopicQueryString() {
+  router.replace({
+    name: "library",
+    query: {
+      ...route.query,
+      topics: selectedTopics.value.map((topic: any) => topic.name).join(","),
+    },
+  });
+}
+
+function goToReviews(e: Event, productId: string) {
+  e.stopPropagation();
+  e.preventDefault();
+  router.push(`/product/${productId}/reviews`);
+}
+
+function topicSelected() {
+  appendTopicQueryString();
+  filterProducts();
+}
+
+function removeTopic(index: number) {
+  selectedTopics.value.splice(index, 1);
+  appendTopicQueryString();
+  filterProducts();
+}
+
+function searchByString() {
+  router.replace({
+    name: "library",
+    query: {
+      ...route.query,
+      search: searchString.value,
+    },
+  });
+  filterProducts();
+}
+
+function loadMoreCards() {
+  const page = filteredProducts.value.slice(
+    scrollSliceStart.value,
+    scrollSliceStart.value + scrollSliceIncrement.value
+  );
+  page.forEach((product) => {
+    scrollerData.value.push(product);
+  });
+  scrollSliceStart.value += scrollSliceIncrement.value;
+}
+
+function filterByQueryString(
+  queryCategories: any,
+  queryTopics: any,
+  querySearch: any
+) {
+  if (queryCategories) {
+    queryCategories = queryCategories
+      .split(",")
+      .map((queryCategory: any) => queryCategory.toLowerCase());
+    selectedCategories.value = categoryStore.allCategories.filter((cat: any) =>
+      queryCategories.includes(cat.name.toLowerCase())
+    );
+  }
+  if (queryTopics) {
+    queryTopics = queryTopics
+      .split(",")
+      .map((queryTopic: any) => queryTopic.toLowerCase());
+    selectedTopics.value = topicStore.allTopics.filter((topic: any) =>
+      queryTopics.includes(topic.name.toLowerCase())
+    );
+  }
+  if (querySearch) {
+    searchString.value = querySearch.toLowerCase();
+  }
+  filterProducts();
+  cardsAreLoading.value = false;
+}
+
+function sortChanged() {
+  filterProducts();
+}
+
+onMounted(async () => {
+  window.scrollTo(0, 0);
+  // read query strings and handle filters as needed
+  const queryCategories = route.query.categories || route.query.Categories;
+  const queryTopics = route.query.topics || route.query.Topics;
+  const querySearch = route.query.search || route.query.Search;
+  const queryStringPresent = queryCategories || queryTopics || querySearch;
+  cardsAreLoading.value = true;
+  categoryStore.fetchCategories();
+  topicStore.fetchTopics();
+
+  // show products immediately if they exist in store
+  if (productStore.allActiveProducts.length > 0) {
+    filteredProducts.value = productStore.allActiveProducts.filter(
+      (product: any) => product.isActive == 1
+    );
+    if (!queryStringPresent) {
+      loadMoreCards();
+    } else {
+      filterByQueryString(queryCategories, queryTopics, querySearch);
+    }
+  }
+
+  // if products were not in store, render the cards after store is populated
+  await productStore.getAllProducts();
+
+  if (!queryStringPresent) {
+    filterProducts();
+    // set up virtual scroller
+    scrollSliceStart.value = 0;
+    scrollerData.value = [];
+    loadMoreCards();
+  } else {
+    filterByQueryString(queryCategories, queryTopics, querySearch);
+  }
+
+  cardsAreLoading.value = false;
+});
+</script>
+
 <template>
   <div class="library">
     <h1 class="heading">Library</h1>
@@ -172,218 +388,9 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { onMounted, ref } from "vue";
-import { useRouter, useRoute } from "vue-router";
-import { useProductsStore } from "../stores/products";
-import type { IProduct } from "../types/product";
-// import infiniteScroll from "vue-infinite-scroll";
-// Vue.use(infiniteScroll);
-
-const router = useRouter();
-const route = useRoute();
-
-const productStore = useProductsStore();
-
-const filteredProducts = ref<IProduct[]>([]);
-const selectedCategories = ref<any>([]);
-const selectedTopics = ref<any>([]);
-const searchString = ref<string>("");
-const scrollerData = ref<IProduct[]>([]);
-const scrollSliceStart = ref<number>(0);
-const scrollSliceIncrement = ref<number>(10);
-const scrollerIsBusy = ref<boolean>(false);
-const cardsAreLoading = ref<boolean>(false);
-const sortOptions = ref<string[]>(["A-Z", "Z-A", "Most Popular"]);
-const selectedSort = ref<string>("A-Z");
-
-function filterProducts() {
-  scrollerData.value = []; // reset the virtual scroller
-  filteredProducts.value = JSON.parse(
-    JSON.stringify([...productStore.allActiveProducts])
-  ); // reset to starting dataset
-  // check for category matches (inclusive)
-  if (selectedCategories.value.length > 0) {
-    filteredProducts.value = productStore.allActiveProducts.filter((prod) =>
-      selectedCategories.value.some((sc: any) => sc.id == prod.category.id)
-    );
-  }
-  // check for topic matches (exclusive)
-  if (selectedTopics.value.length > 0) {
-    const topicIdArray = selectedTopics.value.map((topic: any) => topic.name);
-    filteredProducts.value = filteredProducts.value.filter((prod: any) =>
-      topicIdArray.every((name: any) =>
-        prod.topics.some((topic: any) => topic.name == name)
-      )
-    );
-  }
-  if (searchString.value !== "") {
-    filteredProducts.value = filteredProducts.value.filter(
-      (prod: any) =>
-        prod.name.toLowerCase().includes(searchString.value.toLowerCase()) ||
-        prod.description
-          .toLowerCase()
-          .includes(searchString.value.toLowerCase())
-    );
-  }
-  if (selectedSort.value == "Z-A") {
-    filteredProducts.value.reverse();
-  } else if (selectedSort.value == "Most Popular") {
-    filteredProducts.value = filteredProducts.value.sort((a: any, b: any) => {
-      if (a.rating == b.rating) {
-        return a.name > b.name ? 1 : -1;
-      }
-      return b.rating > a.rating ? 1 : -1;
-    });
-  }
-  scrollSliceStart.value = 0;
-  loadMoreCards();
-}
-
-function appendCategoryQueryString() {
-  router.replace({
-    name: "library",
-    query: {
-      ...route.query,
-      categories: selectedCategories.value
-        .map((category: any) => category.name)
-        .join(","),
-    },
-  });
-}
-
-function categorySelected() {
-  appendCategoryQueryString();
-  filterProducts();
-}
-
-function removeCategory(index: number) {
-  selectedCategories.value.splice(index, 1);
-  appendCategoryQueryString();
-  filterProducts();
-}
-
-function appendTopicQueryString() {
-  router.replace({
-    name: "library",
-    query: {
-      ...route.query,
-      topics: selectedTopics.value.map((topic: any) => topic.name).join(","),
-    },
-  });
-}
-
-function goToReviews(e: Event, productId: string) {
-  e.stopPropagation();
-  e.preventDefault();
-  router.push(`/product/${productId}/reviews`);
-}
-
-function topicSelected() {
-  appendTopicQueryString();
-  filterProducts();
-}
-
-function removeTopic(index: number) {
-  selectedTopics.value.splice(index, 1);
-  appendTopicQueryString();
-  filterProducts();
-}
-
-function searchByString() {
-  router.replace({
-    name: "library",
-    query: {
-      ...route.query,
-      search: searchString.value,
-    },
-  });
-  filterProducts();
-}
-
-function loadMoreCards() {
-  const page = filteredProducts.value.slice(
-    scrollSliceStart.value,
-    scrollSliceStart.value + scrollSliceIncrement.value
-  );
-  page.forEach((product) => {
-    scrollerData.value.push(product);
-  });
-  scrollSliceStart.value += scrollSliceIncrement.value;
-}
-
-function filterByQueryString(
-  queryCategories: any,
-  queryTopics: any,
-  querySearch: any
-) {
-  if (queryCategories) {
-    queryCategories = queryCategories
-      .split(",")
-      .map((queryCategory: any) => queryCategory.toLowerCase());
-    selectedCategories.value = allCategories.filter((cat: any) =>
-      queryCategories.includes(cat.name.toLowerCase())
-    );
-  }
-  if (queryTopics) {
-    queryTopics = queryTopics
-      .split(",")
-      .map((queryTopic: any) => queryTopic.toLowerCase());
-    selectedTopics.value = allTopics.filter((topic: any) =>
-      queryTopics.includes(topic.name.toLowerCase())
-    );
-  }
-  if (querySearch) {
-    searchString.value = querySearch.toLowerCase();
-  }
-  filterProducts();
-  cardsAreLoading.value = false;
-}
-
-function sortChanged() {
-  filterProducts();
-}
-
-onMounted(async () => {
-  window.scrollTo(0, 0);
-  // read query strings and handle filters as needed
-  const queryCategories = route.query.categories || route.query.Categories;
-  const queryTopics = route.query.topics || route.query.Topics;
-  const querySearch = route.query.search || route.query.Search;
-  const queryStringPresent = queryCategories || queryTopics || querySearch;
-  cardsAreLoading.value = true;
-  fetchCategoriesTopics();
-
-  // show products immediately if they exist in store
-  if (productStore.allActiveProducts.length > 0) {
-    filteredProducts.value = productStore.allActiveProducts.filter(
-      (product: any) => product.isActive == 1
-    );
-    if (!queryStringPresent) {
-      loadMoreCards();
-    } else {
-      filterByQueryString(queryCategories, queryTopics, querySearch);
-    }
-  }
-
-  // if products were not in store, render the cards after store is populated
-  await productStore.getAllProducts();
-
-  if (!queryStringPresent) {
-    filterProducts();
-    // set up virtual scroller
-    scrollSliceStart.value = 0;
-    scrollerData.value = [];
-    loadMoreCards();
-  } else {
-    filterByQueryString(queryCategories, queryTopics, querySearch);
-  }
-
-  cardsAreLoading.value = false;
-});
-</script>
-
 <style lang="scss" scoped>
+@import "../assets/scss/mixins";
+
 .library {
   padding: var(--standard-view);
   @include breakpoint(desktop) {
@@ -437,10 +444,10 @@ onMounted(async () => {
     label {
       color: var(--orange);
     }
-    ::v-deep .multiselect__content-wrapper {
+    :deep(.multiselect__content-wrapper) {
       width: 17rem;
     }
-    ::v-deep .multiselect__single {
+    :deep(.multiselect__single) {
       color: var(--orange);
       font-weight: 800;
     }
@@ -524,7 +531,7 @@ onMounted(async () => {
   height: 0;
   margin: 0 auto;
 }
-::v-deep p.loading {
+:deep(p.loading) {
   text-align: left;
 }
 </style>

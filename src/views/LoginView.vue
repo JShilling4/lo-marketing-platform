@@ -2,6 +2,9 @@
 import { ref } from "vue";
 import TextInput from "../components/TextInput.vue";
 import AppButton from "../components/AppButton.vue";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 
 interface IUserLogin {
   username: string;
@@ -16,7 +19,7 @@ const login = ref<IUserLogin>({
 });
 
 async function handleLogin() {
-  // auth and routing
+  router.push("/library");
 }
 </script>
 
