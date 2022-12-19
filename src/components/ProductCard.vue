@@ -7,6 +7,7 @@ const props = defineProps<{
 }>();
 
 const tooltipShowing = ref<boolean>(false);
+
 const primaryPreviewPath = computed(() => {
   try {
     const primaryImage = props.details.productImages.find(
@@ -17,7 +18,7 @@ const primaryPreviewPath = computed(() => {
     );
     return preview?.path;
   } catch (error) {
-    /* shhhh */
+    console.log(error);
   }
   return undefined;
 });

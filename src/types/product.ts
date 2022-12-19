@@ -9,7 +9,7 @@ export type Product = {
   isActive: boolean;
   createdDatetime: string;
   updatedDatetime: string;
-  rating: string;
+  rating: number;
   reviewCount: number;
   orderCount: number;
   category: {

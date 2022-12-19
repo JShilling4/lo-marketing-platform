@@ -15,7 +15,7 @@ export const allProducts: Product[] = [
     isActive: true,
     createdDatetime: "",
     updatedDatetime: "",
-    rating: "4",
+    rating: 4,
     reviewCount: 1,
     orderCount: 4,
     category: {
@@ -68,7 +68,7 @@ export const allProducts: Product[] = [
     ],
   },
   {
-    id: "1",
+    id: "2",
     name: "Book Cover",
     description: "",
     processingTime: "",
@@ -78,7 +78,7 @@ export const allProducts: Product[] = [
     isActive: true,
     createdDatetime: "",
     updatedDatetime: "",
-    rating: "3",
+    rating: 2,
     reviewCount: 1,
     orderCount: 4,
     category: {
@@ -141,7 +141,7 @@ export const allProducts: Product[] = [
     isActive: true,
     createdDatetime: "",
     updatedDatetime: "",
-    rating: "5",
+    rating: 5,
     reviewCount: 1,
     orderCount: 4,
     category: {
@@ -204,7 +204,7 @@ export const allProducts: Product[] = [
     isActive: true,
     createdDatetime: "",
     updatedDatetime: "",
-    rating: "4",
+    rating: 4,
     reviewCount: 1,
     orderCount: 4,
     category: {
@@ -267,7 +267,7 @@ export const allProducts: Product[] = [
     isActive: true,
     createdDatetime: "",
     updatedDatetime: "",
-    rating: "3",
+    rating: 3,
     reviewCount: 1,
     orderCount: 4,
     category: {
@@ -330,7 +330,7 @@ export const allProducts: Product[] = [
     isActive: true,
     createdDatetime: "",
     updatedDatetime: "",
-    rating: "3",
+    rating: 3,
     reviewCount: 1,
     orderCount: 4,
     category: {
@@ -393,7 +393,7 @@ export const allProducts: Product[] = [
     isActive: true,
     createdDatetime: "",
     updatedDatetime: "",
-    rating: "4",
+    rating: 4,
     reviewCount: 1,
     orderCount: 4,
     category: {

@@ -14,7 +14,7 @@ export const useProductsStore = defineStore("products", {
       const data = allProducts;
       if (!data) return;
 
-      this.products = data;
+      this.products = data.sort((a, b) => (a.name > b.name ? 1 : -1));
       // Vue.toasted.success('Products data refreshed!');
     },
 
@@ -86,8 +86,5 @@ export const useProductsStore = defineStore("products", {
 
     allDiscoverProducts: (state): Product[] =>
       state.products.filter((product) => product.displayDiscover === true),
-
-    allCatalogProducts: (state): Product[] =>
-      state.products.filter((product) => product.displayRealtor === true),
   },
 });
