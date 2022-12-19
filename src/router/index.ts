@@ -9,9 +9,19 @@ const router = createRouter({
       redirect: { name: "login" },
     },
     {
+      path: "/home",
+      name: "home-test",
+      component: () => import("../views/HomeView.vue"),
+    },
+    {
       path: "/login",
       name: "login",
       component: () => import("../views/LoginView.vue"),
+    },
+    {
+      path: "/library",
+      name: "library",
+      component: () => import("../views/LibraryView.vue"),
     },
   ],
 });
