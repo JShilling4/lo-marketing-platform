@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useProductsStore } from "../stores/products";
 import { useCategoryStore } from "../stores/categories";
 import { useTopicStore } from "../stores/topics";
 import type { Product } from "../types/product";
+import type { Category } from "../types/category";
 import ProductCard from "@/components/ProductCard.vue";
+import VueMultiselect from "vue-multiselect";
 // import infiniteScroll from "vue-infinite-scroll";
 // Vue.use(infiniteScroll);
 
@@ -17,7 +19,7 @@ const categoryStore = useCategoryStore();
 const topicStore = useTopicStore();
 
 const filteredProducts = ref<Product[]>([]);
-const selectedCategories = ref<any>([]);
+const selectedCategories = ref<Category[]>([]);
 const selectedTopics = ref<any>([]);
 const searchString = ref<string>("");
 const scrollerData = ref<Product[]>([]);
@@ -27,6 +29,10 @@ const scrollerIsBusy = ref<boolean>(false);
 const cardsAreLoading = ref<boolean>(false);
 const sortOptions = ref<string[]>(["A-Z", "Z-A", "Most Popular"]);
 const selectedSort = ref<string>("A-Z");
+
+watch(selectedCategories, () => {
+  onCategoryChange();
+});
 
 function filterProducts() {
   scrollerData.value = []; // reset the virtual scroller
@@ -77,13 +83,14 @@ function appendCategoryQueryString() {
     query: {
       ...route.query,
       categories: selectedCategories.value
-        .map((category: any) => category.name)
+        .map((category) => category.name)
         .join(","),
     },
   });
 }
 
-function categorySelected() {
+function onCategoryChange() {
+  console.log("select event fired");
   appendCategoryQueryString();
   filterProducts();
 }
@@ -248,7 +255,7 @@ onMounted(async () => {
         <!-- Category -->
         <div class="form-group">
           <div class="multiselect-wrapper --library">
-            <!-- <multi-select
+            <vue-multiselect
               v-model="selectedCategories"
               :multiple="true"
               track-by="id"
@@ -259,13 +266,12 @@ onMounted(async () => {
               deselectLabel=""
               :close-on-select="false"
               :preserve-search="true"
-              :options="allCategories"
-              @input="categorySelected"
+              :options="categoryStore.allCategories"
             >
               <template v-slot:selection="{ values, isOpen }">
                 <span
                   class="multiselect__single"
-                  v-if="values.length &amp;&amp; !isOpen"
+                  v-if="values.length && !isOpen"
                 >
                   {{ values.length }} categor{{
                     values.length > 1 ? "ies" : "y"
@@ -275,7 +281,7 @@ onMounted(async () => {
               </template>
 
               <template v-slot:tag><span></span></template>
-            </multi-select> -->
+            </vue-multiselect>
           </div>
         </div>
 

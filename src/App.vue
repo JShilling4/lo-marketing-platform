@@ -7,7 +7,6 @@ import { useRoute } from "vue-router";
 
 const route = useRoute();
 
-// import Navbar from "@/components/Layout/Navbar";
 // import AdminSidebar from "@/components/Layout/AdminSidebar";
 // import LoadingScreen from "@/components/Shared/LoadingScreen";
 // import LoadingSpinner from "@/components/Shared/LoadingSpinner";
@@ -183,6 +182,10 @@ const adminBarShouldShow = computed(() => {
     </div>
   </div>
 </template>
+
+<style lang="scss">
+@import "./assets/scss/vendor/multiselect.scss";
+</style>
 
 <style lang="scss" scoped>
 header {
