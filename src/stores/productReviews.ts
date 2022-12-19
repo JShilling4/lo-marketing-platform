@@ -1,5 +1,4 @@
 import { defineStore } from "pinia";
-import { productReviewRepository } from "@/repositories/productReviewRepository";
 
 export const useProductReviewsStore = defineStore("productReviews", {
   state: () => {

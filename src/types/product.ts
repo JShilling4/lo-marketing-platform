@@ -1,4 +1,4 @@
-export interface IProduct {
+export type Product = {
   id: string;
   name: string;
   description: string;
@@ -22,9 +22,11 @@ export interface IProduct {
     id: string;
     name: string;
   };
-  topics: {
-    name: string;
-  };
+  topics: [
+    {
+      name: string;
+    }
+  ];
   assignTo: {
     employeeNumber: string;
     fullName: string;
@@ -35,25 +37,33 @@ export interface IProduct {
     fullName: string;
     email: string;
   };
-  productImages: {
-    id: string;
-    primary: string;
-    filepaths: {
-      path: string;
-      type: string;
-    };
-  };
-  formFields: {
-    id: string;
-    type: string;
-    label: string;
-    required: boolean;
-    placeholder: string;
-    sortOrder: number;
-    value: string;
-    options: {
+  productImages: [
+    {
       id: string;
+      primary: string;
+      filepaths: [
+        {
+          path: string;
+          type: string;
+        }
+      ];
+    }
+  ];
+  formFields: [
+    {
+      id: string;
+      type: string;
+      label: string;
+      required: boolean;
+      placeholder: string;
+      sortOrder: number;
       value: string;
-    };
-  };
-}
+      options: [
+        {
+          id: string;
+          value: string;
+        }
+      ];
+    }
+  ];
+};
