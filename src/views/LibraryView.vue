@@ -5,6 +5,7 @@ import { useProductsStore } from "../stores/products";
 import { useCategoryStore } from "../stores/categories";
 import { useTopicStore } from "../stores/topics";
 import type { Product } from "../types/product";
+import ProductCard from "@/components/ProductCard.vue";
 // import infiniteScroll from "vue-infinite-scroll";
 // Vue.use(infiniteScroll);
 
@@ -342,12 +343,7 @@ onMounted(async () => {
     </div>
 
     <!-- Product Cards -->
-    <div
-      v-infinite-scroll="loadMoreCards"
-      infinite-scroll-disabled="busy"
-      infinite-scroll-distance="10"
-      infinite-scroll-immediate-check="false"
-    >
+    <div>
       <transition-group tag="div" name="list" class="cardRow">
         <div
           v-for="product in scrollerData"
@@ -357,21 +353,27 @@ onMounted(async () => {
           <router-link
             :to="{ path: `/product/${product.id}`, query: { ...route.query } }"
           >
-            <!-- <product-card :details="product">
+            <product-card :details="product">
               <slot>
                 <span class="categoryLabel">{{ product.category.name }}</span>
                 <div class="bottomRow">
-                  <star-rating
-                    :star-size="25"
-                    :show-rating="false"
-                    :increment="0.5"
-                    :read-only="true"
-                    :rating="product.rating"
-                    @click.native="goToReviews($event, product.id)"
-                  />
+                  <div>
+                    <img
+                      height="20"
+                      src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Gold_Star.svg/2048px-Gold_Star.svg.png"
+                      v-for="index in Number(product.rating)"
+                      :key="index"
+                    />
+                    <img
+                      height="20"
+                      src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/Star_empty.svg/471px-Star_empty.svg.png"
+                      v-for="index in 5 - Number(product.rating)"
+                      :key="index"
+                    />
+                  </div>
                 </div>
               </slot>
-            </product-card> -->
+            </product-card>
           </router-link>
         </div>
         <div class="emptyRowFiller" key="filler1"></div>

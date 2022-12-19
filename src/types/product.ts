@@ -3,20 +3,14 @@ export type Product = {
   name: string;
   description: string;
   processingTime: string;
-  displayRealtor: boolean;
   displayDiscover: boolean;
   isDownload: boolean;
-  isCobrandable: boolean;
   instantAssetPath: string;
   isActive: boolean;
-  sortOrder: number;
   createdDatetime: string;
   updatedDatetime: string;
-  invoiceValue: string;
-  invoiceDescription: string;
   rating: string;
   reviewCount: number;
-  requires3rdParty: boolean;
   orderCount: number;
   category: {
     id: string;
@@ -40,7 +34,7 @@ export type Product = {
   productImages: [
     {
       id: string;
-      primary: string;
+      primary: boolean;
       filepaths: [
         {
           path: string;
