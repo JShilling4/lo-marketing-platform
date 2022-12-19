@@ -1,11 +1,15 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useProductsStore } from "../stores/products";
 import { useCategoryStore } from "../stores/categories";
 import { useTopicStore } from "../stores/topics";
 import type { Product } from "../types/product";
+import type { Category } from "../types/category";
 import ProductCard from "@/components/ProductCard.vue";
+import ChipMarker from "@/components/ChipMarker.vue";
+import VueMultiselect from "vue-multiselect";
+import type { Topic } from "@/types/topic";
 // import infiniteScroll from "vue-infinite-scroll";
 // Vue.use(infiniteScroll);
 
@@ -17,16 +21,28 @@ const categoryStore = useCategoryStore();
 const topicStore = useTopicStore();
 
 const filteredProducts = ref<Product[]>([]);
-const selectedCategories = ref<any>([]);
-const selectedTopics = ref<any>([]);
+const selectedCategories = ref<Category[]>([]);
+const selectedTopics = ref<Topic[]>([]);
 const searchString = ref<string>("");
 const scrollerData = ref<Product[]>([]);
 const scrollSliceStart = ref<number>(0);
 const scrollSliceIncrement = ref<number>(10);
-const scrollerIsBusy = ref<boolean>(false);
+// const scrollerIsBusy = ref<boolean>(false);
 const cardsAreLoading = ref<boolean>(false);
-const sortOptions = ref<string[]>(["A-Z", "Z-A", "Most Popular"]);
+const sortOptions = ["A-Z", "Z-A", "Most Popular"];
 const selectedSort = ref<string>("A-Z");
+
+watch(selectedCategories, () => {
+  appendCategoryQueryString();
+  filterProducts();
+});
+watch(selectedTopics, () => {
+  appendCategoryQueryString();
+  filterProducts();
+});
+watch(selectedSort, () => {
+  filterProducts();
+});
 
 function filterProducts() {
   scrollerData.value = []; // reset the virtual scroller
@@ -44,7 +60,7 @@ function filterProducts() {
     const topicIdArray = selectedTopics.value.map((topic: any) => topic.name);
     filteredProducts.value = filteredProducts.value.filter((prod: any) =>
       topicIdArray.every((name: any) =>
-        prod.topics.some((topic: any) => topic.name == name)
+        prod.topics.some((topic: any) => topic.name === name)
       )
     );
   }
@@ -57,11 +73,11 @@ function filterProducts() {
           .includes(searchString.value.toLowerCase())
     );
   }
-  if (selectedSort.value == "Z-A") {
+  if (selectedSort.value === "Z-A") {
     filteredProducts.value.reverse();
-  } else if (selectedSort.value == "Most Popular") {
+  } else if (selectedSort.value === "Most Popular") {
     filteredProducts.value = filteredProducts.value.sort((a: any, b: any) => {
-      if (a.rating == b.rating) {
+      if (a.rating === b.rating) {
         return a.name > b.name ? 1 : -1;
       }
       return b.rating > a.rating ? 1 : -1;
@@ -77,15 +93,10 @@ function appendCategoryQueryString() {
     query: {
       ...route.query,
       categories: selectedCategories.value
-        .map((category: any) => category.name)
+        .map((category) => category.name)
         .join(","),
     },
   });
-}
-
-function categorySelected() {
-  appendCategoryQueryString();
-  filterProducts();
 }
 
 function removeCategory(index: number) {
@@ -104,16 +115,11 @@ function appendTopicQueryString() {
   });
 }
 
-function goToReviews(e: Event, productId: string) {
-  e.stopPropagation();
-  e.preventDefault();
-  router.push(`/product/${productId}/reviews`);
-}
-
-function topicSelected() {
-  appendTopicQueryString();
-  filterProducts();
-}
+// function goToReviews(e: Event, productId: string) {
+//   e.stopPropagation();
+//   e.preventDefault();
+//   router.push(`/product/${productId}/reviews`);
+// }
 
 function removeTopic(index: number) {
   selectedTopics.value.splice(index, 1);
@@ -171,10 +177,6 @@ function filterByQueryString(
   cardsAreLoading.value = false;
 }
 
-function sortChanged() {
-  filterProducts();
-}
-
 onMounted(async () => {
   window.scrollTo(0, 0);
   // read query strings and handle filters as needed
@@ -199,7 +201,7 @@ onMounted(async () => {
   }
 
   // if products were not in store, render the cards after store is populated
-  await productStore.getAllProducts();
+  productStore.getAllProducts();
 
   if (!queryStringPresent) {
     filterProducts();
@@ -223,23 +225,23 @@ onMounted(async () => {
       <i class="fas fa-tag"></i>
       <div class="chip-container">
         <span
-          v-if="selectedCategories.concat(selectedTopics).length < 1"
+          v-if="selectedCategories.length + selectedTopics.length < 1"
           class="noTagsText"
           >No tags selected.</span
         >
-        <!-- <chip-marker
+        <chip-marker
           v-for="(category, index) in selectedCategories"
           :key="`category${category.id}`"
           :id="category.id"
           :name="category.name"
-          @remove-chip="removeCategory(index, category.id)"
+          @remove-chip="removeCategory(index)"
         />
         <chip-marker
           v-for="(topic, index) in selectedTopics"
           :key="`topic${topic.name}`"
           :name="topic.name"
           @remove-chip="removeTopic(index)"
-        /> -->
+        />
       </div>
     </div>
 
@@ -248,7 +250,7 @@ onMounted(async () => {
         <!-- Category -->
         <div class="form-group">
           <div class="multiselect-wrapper --library">
-            <!-- <multi-select
+            <vue-multiselect
               v-model="selectedCategories"
               :multiple="true"
               track-by="id"
@@ -259,13 +261,12 @@ onMounted(async () => {
               deselectLabel=""
               :close-on-select="false"
               :preserve-search="true"
-              :options="allCategories"
-              @input="categorySelected"
+              :options="categoryStore.allCategories"
             >
               <template v-slot:selection="{ values, isOpen }">
                 <span
                   class="multiselect__single"
-                  v-if="values.length &amp;&amp; !isOpen"
+                  v-if="values.length && !isOpen"
                 >
                   {{ values.length }} categor{{
                     values.length > 1 ? "ies" : "y"
@@ -275,14 +276,14 @@ onMounted(async () => {
               </template>
 
               <template v-slot:tag><span></span></template>
-            </multi-select> -->
+            </vue-multiselect>
           </div>
         </div>
 
         <!-- Topics -->
         <div class="form-group">
           <div class="multiselect-wrapper --library">
-            <!-- <multi-select
+            <vue-multiselect
               v-model="selectedTopics"
               :multiple="true"
               track-by="name"
@@ -293,23 +294,22 @@ onMounted(async () => {
               deselectLabel=""
               :close-on-select="false"
               :preserve-search="true"
-              :options="allTopics"
-              @input="topicSelected"
+              :options="topicStore.allTopics"
             >
               <template v-slot:selection="{ values, isOpen }">
                 <span
                   class="multiselect__single"
-                  v-if="values.length &amp;&amp; !isOpen"
+                  v-if="values.length && !isOpen"
                 >
-                  {{ values.length }} topic<span v-if="values.length > 1"
-                    >s</span
-                  >
+                  {{ values.length }} topic<span v-if="values.length > 1">
+                    s
+                  </span>
                   selected
                 </span>
               </template>
 
               <template v-slot:tag><span></span></template>
-            </multi-select> -->
+            </vue-multiselect>
           </div>
         </div>
       </div>
@@ -328,7 +328,7 @@ onMounted(async () => {
       <!-- Sort -->
       <div class="multiselect-wrapper sortControl">
         <div class="form-group">
-          <!-- <multi-select
+          <vue-multiselect
             v-model="selectedSort"
             :options="sortOptions"
             placeholder="Sort"
@@ -336,8 +336,7 @@ onMounted(async () => {
             selectLabel=""
             selectedLabel=""
             deselectLabel=""
-            @input="sortChanged"
-          /> -->
+          />
         </div>
       </div>
     </div>
@@ -361,13 +360,13 @@ onMounted(async () => {
                     <img
                       height="20"
                       src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Gold_Star.svg/2048px-Gold_Star.svg.png"
-                      v-for="index in Number(product.rating)"
+                      v-for="index in product.rating"
                       :key="index"
                     />
                     <img
                       height="20"
                       src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/Star_empty.svg/471px-Star_empty.svg.png"
-                      v-for="index in 5 - Number(product.rating)"
+                      v-for="index in 5 - product.rating"
                       :key="index"
                     />
                   </div>
@@ -405,9 +404,11 @@ onMounted(async () => {
 .heading {
   font-weight: 800;
 }
+
 .chipBar {
   display: flex;
-  margin-top: 3rem;
+  align-items: center;
+  margin: 2rem 0;
   min-height: 4rem;
   .chip-container {
     display: flex;
@@ -425,6 +426,7 @@ onMounted(async () => {
     line-height: 15px;
   }
 }
+
 .filterBar {
   display: flex;
   align-items: flex-end;
@@ -474,7 +476,7 @@ onMounted(async () => {
     }
     input {
       width: 23rem;
-      height: 2.6rem;
+      height: 3.6rem;
       padding: 0.5rem 0.5rem 0.25rem 2.8rem;
       border-radius: 5rem;
       border: 1px solid var(--gray);
@@ -491,7 +493,7 @@ onMounted(async () => {
     }
     .fa-search {
       position: absolute;
-      top: 0.6rem;
+      top: 1rem;
       left: 0.75rem;
       color: var(--gray);
     }
@@ -503,24 +505,29 @@ onMounted(async () => {
     }
   }
 }
+
 .cardContainer {
   width: var(--prodCardContainer-width);
   margin: 0 auto;
 }
+
 .cardRow {
   display: flex;
   flex-wrap: wrap;
-  margin-top: 5rem;
+  margin: 5rem 0 0 -2rem;
   padding: 0 4px;
+
   .categoryLabel {
     color: var(--gray);
     margin-top: 0.25rem;
     font-size: 1.4rem;
   }
+
   .bottomRow {
     margin-top: 0.5rem;
     display: flex;
     align-items: center;
+
     .orderBtn {
       display: inline-block;
       font-size: 1.3rem;
@@ -533,6 +540,7 @@ onMounted(async () => {
   height: 0;
   margin: 0 auto;
 }
+
 :deep(p.loading) {
   text-align: left;
 }
