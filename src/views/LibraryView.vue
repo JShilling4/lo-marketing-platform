@@ -7,6 +7,7 @@ import { useTopicStore } from "../stores/topics";
 import type { Product } from "../types/product";
 import type { Category } from "../types/category";
 import ProductCard from "@/components/ProductCard.vue";
+import ChipMarker from "@/components/ChipMarker.vue";
 import VueMultiselect from "vue-multiselect";
 // import infiniteScroll from "vue-infinite-scroll";
 // Vue.use(infiniteScroll);
@@ -234,19 +235,19 @@ onMounted(async () => {
           class="noTagsText"
           >No tags selected.</span
         >
-        <!-- <chip-marker
+        <chip-marker
           v-for="(category, index) in selectedCategories"
           :key="`category${category.id}`"
           :id="category.id"
           :name="category.name"
-          @remove-chip="removeCategory(index, category.id)"
+          @remove-chip="removeCategory(index)"
         />
         <chip-marker
           v-for="(topic, index) in selectedTopics"
           :key="`topic${topic.name}`"
           :name="topic.name"
           @remove-chip="removeTopic(index)"
-        /> -->
+        />
       </div>
     </div>
 
@@ -413,7 +414,8 @@ onMounted(async () => {
 }
 .chipBar {
   display: flex;
-  margin-top: 3rem;
+  align-items: center;
+  margin: 3rem 0;
   min-height: 4rem;
   .chip-container {
     display: flex;
