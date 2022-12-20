@@ -1,19 +1,16 @@
-# loanOfficer-marketing-platform
+# marketing-platform
 
 ## Project setup
 ```
-npm install
+pnpm install
 ```
 
-### Compiles and hot-reloads for development
+### Start dev server
 ```
-npm run serve-dev
-```
-
-### Compiles and minifies for production
-```
-npm run build-prod
+pnpm serve
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### Build for production
+```
+pnpm run build
+```
