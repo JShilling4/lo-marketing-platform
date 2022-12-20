@@ -19,23 +19,23 @@ const route = useRoute();
 
 const userStore = useUserStore();
 
-const loading = computed(() => {
-  // if (this.auth.status == "loading") {
-  // 	return true;
-  // }
-  return false;
-});
+// const loading = computed(() => {
+//   // if (this.auth.status == "loading") {
+//   // 	return true;
+//   // }
+//   return false;
+// });
 
-const userIsAdmin = computed(() => {
-  // try {
-  // 	return this.users.activeUser.userRoles.includes(
-  // 		"ROLE_MARKETING_EMPLOYEE"
-  // 	);
-  // } catch (error) {
-  // 	/* shhhh */
-  // }
-  return true;
-});
+// const userIsAdmin = computed(() => {
+//   // try {
+//   // 	return this.users.activeUser.userRoles.includes(
+//   // 		"ROLE_MARKETING_EMPLOYEE"
+//   // 	);
+//   // } catch (error) {
+//   // 	/* shhhh */
+//   // }
+//   return true;
+// });
 
 const navShouldShow = computed(() => {
   if (
@@ -51,19 +51,19 @@ const navShouldShow = computed(() => {
   return false;
 });
 
-const adminBarShouldShow = computed(() => {
-  // if (
-  // 	this.$route.name !== "login" &&
-  // 	this.userIsAdmin &&
-  // 	!this.$route.path.includes("catalog") &&
-  // 	this.$route.name !== "orderProofs" &&
-  // 	this.$route.name !== "orderProof"
-  // ) {
-  // 	return true;
-  // }
-  // return false;
-  return true;
-});
+// const adminBarShouldShow = computed(() => {
+//   // if (
+//   // 	this.$route.name !== "login" &&
+//   // 	this.userIsAdmin &&
+//   // 	!this.$route.path.includes("catalog") &&
+//   // 	this.$route.name !== "orderProofs" &&
+//   // 	this.$route.name !== "orderProof"
+//   // ) {
+//   // 	return true;
+//   // }
+//   // return false;
+//   return true;
+// });
 
 // tokenExpiry() {
 // 	return this.auth.tokenExpiry;

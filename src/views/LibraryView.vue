@@ -1,22 +1,26 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
-import { useProductsStore } from "../stores/products";
+
+import { useProductStore } from "../stores/products";
 import { useCategoryStore } from "../stores/categories";
 import { useTopicStore } from "../stores/topics";
-import type { Product } from "../types/product";
-import type { Category } from "../types/category";
+
 import ProductCard from "@/components/ProductCard.vue";
+import StarRating from "@/components/StarRating.vue";
 import ChipMarker from "@/components/ChipMarker.vue";
 import VueMultiselect from "vue-multiselect";
+
 import type { Topic } from "@/types/topic";
+import type { Product } from "../types/product";
+import type { Category } from "../types/category";
 // import infiniteScroll from "vue-infinite-scroll";
 // Vue.use(infiniteScroll);
 
 const router = useRouter();
 const route = useRoute();
 
-const productStore = useProductsStore();
+const productStore = useProductStore();
 const categoryStore = useCategoryStore();
 const topicStore = useTopicStore();
 
@@ -356,20 +360,7 @@ onMounted(async () => {
               <slot>
                 <span class="categoryLabel">{{ product.category.name }}</span>
                 <div class="bottomRow">
-                  <div>
-                    <img
-                      height="20"
-                      src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Gold_Star.svg/2048px-Gold_Star.svg.png"
-                      v-for="index in product.rating"
-                      :key="index"
-                    />
-                    <img
-                      height="20"
-                      src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/Star_empty.svg/471px-Star_empty.svg.png"
-                      v-for="index in 5 - product.rating"
-                      :key="index"
-                    />
-                  </div>
+                  <star-rating :rating="product.rating" />
                 </div>
               </slot>
             </product-card>
