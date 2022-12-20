@@ -2,7 +2,7 @@ import type { Product } from "@/types/product";
 import { defineStore } from "pinia";
 import { allProducts, getProduct } from "./mockData";
 
-export const useProductsStore = defineStore("products", {
+export const useProductStore = defineStore("products", {
   state: () => {
     return {
       products: [] as Product[],
@@ -10,7 +10,7 @@ export const useProductsStore = defineStore("products", {
   },
 
   actions: {
-    async getAllProducts() {
+    getAllProducts() {
       const data = allProducts;
       if (!data) return;
 
@@ -18,9 +18,9 @@ export const useProductsStore = defineStore("products", {
       // Vue.toasted.success('Products data refreshed!');
     },
 
-    async getProduct(id: string) {
+    getProduct(id: string) {
       const data = getProduct(id);
-      if (!data) return;
+      if (!data) return null;
       if (this.products.length > 0) {
         const productIndex = this.products.findIndex(
           (product: any) => product.id == id
@@ -32,6 +32,7 @@ export const useProductsStore = defineStore("products", {
           this.products.push(data);
         }
       }
+      return data;
     },
 
     // async postProduct(payload) {

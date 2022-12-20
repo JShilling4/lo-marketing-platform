@@ -8,7 +8,7 @@ export const allProducts: Product[] = [
     id: "1",
     name: "Business Brochure",
     description: "",
-    processingTime: "",
+    processingTime: 60,
     displayDiscover: false,
     isDownload: false,
     instantAssetPath: "",
@@ -21,12 +21,10 @@ export const allProducts: Product[] = [
     category: {
       id: "1",
       name: "Brochures",
+      description: "",
+      isActive: true,
     },
-    topics: [
-      {
-        name: "",
-      },
-    ],
+    topics: [],
     assignTo: {
       employeeNumber: "",
       fullName: "",
@@ -71,7 +69,7 @@ export const allProducts: Product[] = [
     id: "2",
     name: "Book Cover",
     description: "",
-    processingTime: "",
+    processingTime: 120,
     displayDiscover: false,
     isDownload: false,
     instantAssetPath: "",
@@ -84,12 +82,10 @@ export const allProducts: Product[] = [
     category: {
       id: "2",
       name: "Book Covers",
+      description: "",
+      isActive: true,
     },
-    topics: [
-      {
-        name: "",
-      },
-    ],
+    topics: [],
     assignTo: {
       employeeNumber: "",
       fullName: "",
@@ -134,7 +130,7 @@ export const allProducts: Product[] = [
     id: "3",
     name: "Club Flyer",
     description: "",
-    processingTime: "",
+    processingTime: 180,
     displayDiscover: false,
     isDownload: false,
     instantAssetPath: "",
@@ -147,12 +143,10 @@ export const allProducts: Product[] = [
     category: {
       id: "3",
       name: "Flyers",
+      description: "",
+      isActive: true,
     },
-    topics: [
-      {
-        name: "",
-      },
-    ],
+    topics: [],
     assignTo: {
       employeeNumber: "",
       fullName: "",
@@ -197,7 +191,7 @@ export const allProducts: Product[] = [
     id: "4",
     name: "Yard Signage",
     description: "",
-    processingTime: "",
+    processingTime: 240,
     displayDiscover: false,
     isDownload: false,
     instantAssetPath: "",
@@ -210,12 +204,10 @@ export const allProducts: Product[] = [
     category: {
       id: "4",
       name: "Signage",
+      description: "",
+      isActive: true,
     },
-    topics: [
-      {
-        name: "",
-      },
-    ],
+    topics: [],
     assignTo: {
       employeeNumber: "",
       fullName: "",
@@ -260,7 +252,7 @@ export const allProducts: Product[] = [
     id: "5",
     name: "Business Card 1",
     description: "",
-    processingTime: "",
+    processingTime: 300,
     displayDiscover: false,
     isDownload: false,
     instantAssetPath: "",
@@ -273,12 +265,10 @@ export const allProducts: Product[] = [
     category: {
       id: "5",
       name: "Business Cards",
+      description: "",
+      isActive: true,
     },
-    topics: [
-      {
-        name: "",
-      },
-    ],
+    topics: [],
     assignTo: {
       employeeNumber: "",
       fullName: "",
@@ -323,7 +313,7 @@ export const allProducts: Product[] = [
     id: "6",
     name: "Social Media Banner",
     description: "",
-    processingTime: "",
+    processingTime: 360,
     displayDiscover: false,
     isDownload: false,
     instantAssetPath: "",
@@ -336,12 +326,10 @@ export const allProducts: Product[] = [
     category: {
       id: "6",
       name: "Social Media Banners",
+      description: "",
+      isActive: true,
     },
-    topics: [
-      {
-        name: "",
-      },
-    ],
+    topics: [],
     assignTo: {
       employeeNumber: "",
       fullName: "",
@@ -386,7 +374,7 @@ export const allProducts: Product[] = [
     id: "7",
     name: "Emails",
     description: "",
-    processingTime: "",
+    processingTime: 420,
     displayDiscover: false,
     isDownload: false,
     instantAssetPath: "",
@@ -399,12 +387,10 @@ export const allProducts: Product[] = [
     category: {
       id: "7",
       name: "Email Templates",
+      description: "",
+      isActive: true,
     },
-    topics: [
-      {
-        name: "",
-      },
-    ],
+    topics: [],
     assignTo: {
       employeeNumber: "",
       fullName: "",

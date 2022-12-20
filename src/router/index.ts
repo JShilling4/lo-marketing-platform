@@ -23,6 +23,17 @@ const router = createRouter({
       name: "library",
       component: () => import("../views/LibraryView.vue"),
     },
+    {
+      path: "/product/:productId",
+      name: "ProductDetail",
+      meta: {
+        requiresAuth: true,
+      },
+      component: () =>
+        import(
+          /* webpackChunkName: "ProductDetail" */ "../views/ProductDetailView.vue"
+        ),
+    },
   ],
 });
 
