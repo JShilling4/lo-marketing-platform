@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from "vue";
+import { computed, onMounted, ref, toRaw } from "vue";
 import { useRouter, useRoute } from "vue-router";
 
 import { useProductStore } from "@/stores/products";
@@ -7,6 +7,8 @@ import { useUserStore } from "@/stores/user";
 
 import StarRating from "@/components/StarRating.vue";
 import TextInput from "@/components/TextInput.vue";
+import TextArea from "@/components/TextArea.vue";
+import RadioInput from "@/components/RadioInput.vue";
 import VueMultiselect from "vue-multiselect";
 import AppButton from "@/components/AppButton.vue";
 
@@ -139,7 +141,7 @@ function setOrderData() {
   };
   localOrder.value.secondaryAssignTo = product.value.secondaryAssignTo;
   localOrder.value.dueDate = new Date().toISOString();
-  localOrder.value.product.id = product.value.id;
+  localOrder.value.product = product.value;
   localOrder.value.product.name = product.value.name;
   localOrder.value.details = JSON.parse(
     JSON.stringify(product.value.formFields)
@@ -157,16 +159,18 @@ onMounted(async () => {
   window.scrollTo(0, 0);
   // first check if we have this product loaded in the store
   const p = productStore.productById(route.params.productId as string);
-  console.log(p);
   if (p) {
-    product.value = JSON.parse(JSON.stringify({ ...p }));
+    product.value = JSON.parse(JSON.stringify(p));
+    setOrderData();
   } else {
     // product is not in store, attempt to load from API & route to 404 if doesnt exist
-    const data = undefined;
-    if (!data) {
+    productStore.getAllProducts();
+    const p = productStore.productById(route.params.productId as string);
+    if (!p) {
       router.push("/404");
     } else {
-      product.value = JSON.parse(JSON.stringify(data));
+      product.value = JSON.parse(JSON.stringify(p));
+      setOrderData();
     }
   }
 });
@@ -180,9 +184,8 @@ onMounted(async () => {
         <div class="productDisplay">
           <!-- Main Preview -->
           <a
-            v-if="selectedImageFullscreenPath"
             class="main"
-            :href="selectedImageFullscreenPath"
+            :href="selectedImageFullscreenPath ?? ''"
             target="_blank"
           >
             <img
@@ -332,9 +335,7 @@ onMounted(async () => {
 @import "../assets/scss/mixins";
 
 .productPage {
-  display: flex;
-  justify-content: space-between;
-  padding: 4rem 20% 10rem;
+  padding: 4rem 23% 10rem;
   @include breakpoint(desktop) {
     padding: 4rem 10% 10rem;
   }
