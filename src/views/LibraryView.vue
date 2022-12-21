@@ -443,7 +443,7 @@ onMounted(async () => {
       width: 17rem;
     }
     :deep(.multiselect__single) {
-      color: var(--orange);
+      /* color: var(--orange); */
       font-weight: 800;
     }
   }

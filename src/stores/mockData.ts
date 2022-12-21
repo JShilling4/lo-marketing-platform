@@ -44,6 +44,14 @@ export const allProducts: Product[] = [
             path: "https://media.istockphoto.com/id/1203085103/vector/business-brochure-flyer-design-template.jpg?s=612x612&w=is&k=20&c=akRE-_KFi8UbAZHghzOGn_YvdZtzlN9LZHDKXjmmcRU=",
             type: "preview",
           },
+          {
+            path: "https://media.istockphoto.com/id/1203085103/vector/business-brochure-flyer-design-template.jpg?s=612x612&w=is&k=20&c=akRE-_KFi8UbAZHghzOGn_YvdZtzlN9LZHDKXjmmcRU=",
+            type: "thumbnail",
+          },
+          {
+            path: "https://media.istockphoto.com/id/1203085103/vector/business-brochure-flyer-design-template.jpg?s=612x612&w=is&k=20&c=akRE-_KFi8UbAZHghzOGn_YvdZtzlN9LZHDKXjmmcRU=",
+            type: "fullscreen",
+          },
         ],
       },
     ],
@@ -105,6 +113,14 @@ export const allProducts: Product[] = [
             path: "https://media.istockphoto.com/id/1208808758/vector/city-background-business-book-cover-design-template.jpg?s=612x612&w=is&k=20&c=Co7Hkx3rOTDKB42xOsnPyKWUQBZ-xCLS2sZHRcX3r_E=",
             type: "preview",
           },
+          {
+            path: "https://media.istockphoto.com/id/1208808758/vector/city-background-business-book-cover-design-template.jpg?s=612x612&w=is&k=20&c=Co7Hkx3rOTDKB42xOsnPyKWUQBZ-xCLS2sZHRcX3r_E=",
+            type: "thumbnail",
+          },
+          {
+            path: "https://media.istockphoto.com/id/1208808758/vector/city-background-business-book-cover-design-template.jpg?s=612x612&w=is&k=20&c=Co7Hkx3rOTDKB42xOsnPyKWUQBZ-xCLS2sZHRcX3r_E=",
+            type: "fullscreen",
+          },
         ],
       },
     ],
@@ -129,8 +145,9 @@ export const allProducts: Product[] = [
   {
     id: "3",
     name: "Club Flyer",
-    description: "",
-    processingTime: 180,
+    description:
+      "Specialized flyer for club events. Provide the required fields and additional details can be discussed in the order.",
+    processingTime: 40,
     displayDiscover: false,
     isDownload: false,
     instantAssetPath: "",
@@ -166,31 +183,54 @@ export const allProducts: Product[] = [
             path: "https://freepsdflyer.com/wp-content/uploads/2021/02/Free-Night-Club-Party-PSD-Flyer-Template.jpg",
             type: "preview",
           },
+          {
+            path: "https://freepsdflyer.com/wp-content/uploads/2021/02/Free-Night-Club-Party-PSD-Flyer-Template.jpg",
+            type: "thumbnail",
+          },
+          {
+            path: "https://freepsdflyer.com/wp-content/uploads/2021/02/Free-Night-Club-Party-PSD-Flyer-Template.jpg",
+            type: "fullScreen",
+          },
         ],
       },
     ],
     formFields: [
       {
-        id: "",
-        type: "",
-        label: "",
+        id: "1",
+        type: "text",
+        label: "Club name",
+        required: true,
+        placeholder: "Enter club name...",
+        sortOrder: 1,
+        value: "",
+        options: [],
+      },
+      {
+        id: "2",
+        type: "text",
+        label: "Website link",
+        required: false,
+        placeholder: "",
+        sortOrder: 1,
+        value: "",
+        options: [],
+      },
+      {
+        id: "3",
+        type: "textbox",
+        label: "Event description",
         required: true,
         placeholder: "",
         sortOrder: 1,
         value: "",
-        options: [
-          {
-            id: "",
-            value: "",
-          },
-        ],
+        options: [],
       },
     ],
   },
   {
     id: "4",
     name: "Yard Signage",
-    description: "",
+    description: "Customizable marketing or event yard signage ",
     processingTime: 240,
     displayDiscover: false,
     isDownload: false,
@@ -226,6 +266,14 @@ export const allProducts: Product[] = [
           {
             path: "https://cms-assets.tutsplus.com/cdn-cgi/image/width=850/uploads/users/2659/posts/34618/image-upload/Classic%20Yard%20Sale%20Flyer%20Template-intro.jpg",
             type: "preview",
+          },
+          {
+            path: "https://cms-assets.tutsplus.com/cdn-cgi/image/width=850/uploads/users/2659/posts/34618/image-upload/Classic%20Yard%20Sale%20Flyer%20Template-intro.jpg",
+            type: "thumbnail",
+          },
+          {
+            path: "https://cms-assets.tutsplus.com/cdn-cgi/image/width=850/uploads/users/2659/posts/34618/image-upload/Classic%20Yard%20Sale%20Flyer%20Template-intro.jpg",
+            type: "fullscreen",
           },
         ],
       },
@@ -288,6 +336,14 @@ export const allProducts: Product[] = [
             path: "https://d2tl9ctlpnidkn.cloudfront.net/hlsonprint/images/product/business-cards-printing8847.jpg",
             type: "preview",
           },
+          {
+            path: "https://d2tl9ctlpnidkn.cloudfront.net/hlsonprint/images/product/business-cards-printing8847.jpg",
+            type: "thumbnail",
+          },
+          {
+            path: "https://d2tl9ctlpnidkn.cloudfront.net/hlsonprint/images/product/business-cards-printing8847.jpg",
+            type: "fullscreen",
+          },
         ],
       },
     ],
@@ -349,6 +405,14 @@ export const allProducts: Product[] = [
             path: "https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/5c913c101281739.5f1b0a1e449a2.jpg",
             type: "preview",
           },
+          {
+            path: "https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/5c913c101281739.5f1b0a1e449a2.jpg",
+            type: "thumbnail",
+          },
+          {
+            path: "https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/5c913c101281739.5f1b0a1e449a2.jpg",
+            type: "fullscreen",
+          },
         ],
       },
     ],
@@ -409,6 +473,14 @@ export const allProducts: Product[] = [
           {
             path: "https://static.wixstatic.com/media/311dce_1f75acc705854545b16dd1e2a2a4ac8a~mv2.png/v1/fill/w_640,h_560,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/311dce_1f75acc705854545b16dd1e2a2a4ac8a~mv2.png",
             type: "preview",
+          },
+          {
+            path: "https://static.wixstatic.com/media/311dce_1f75acc705854545b16dd1e2a2a4ac8a~mv2.png/v1/fill/w_640,h_560,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/311dce_1f75acc705854545b16dd1e2a2a4ac8a~mv2.png",
+            type: "thumbnail",
+          },
+          {
+            path: "https://static.wixstatic.com/media/311dce_1f75acc705854545b16dd1e2a2a4ac8a~mv2.png/v1/fill/w_640,h_560,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/311dce_1f75acc705854545b16dd1e2a2a4ac8a~mv2.png",
+            type: "fullscreen",
           },
         ],
       },
