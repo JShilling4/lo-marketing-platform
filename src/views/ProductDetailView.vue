@@ -9,6 +9,7 @@ import StarRating from "@/components/StarRating.vue";
 import TextInput from "@/components/TextInput.vue";
 import TextArea from "@/components/TextArea.vue";
 import RadioInput from "@/components/RadioInput.vue";
+import SingleFileInput from "@/components/SingleFileInput.vue";
 import VueMultiselect from "vue-multiselect";
 import AppButton from "@/components/AppButton.vue";
 
@@ -303,7 +304,6 @@ onMounted(async () => {
               <!-- Single File Upload -->
               <single-file-input
                 v-if="field.type == 'file'"
-                :field="field"
                 buttonText="Upload"
                 @input="detailFileChanged($event, index)"
               />

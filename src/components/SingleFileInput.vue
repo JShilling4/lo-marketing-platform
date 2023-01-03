@@ -3,16 +3,17 @@ import { computed, onMounted, ref, watch } from "vue";
 import AppButton from "./AppButton.vue";
 
 export type PropTypes = {
-  buttonText: string;
-  buttonSize: string;
-  name: string;
-  fileName: string | File;
-  isDisabled: boolean;
-  showFileName: boolean;
+  buttonText?: string;
+  buttonSize?: string;
+  name?: string;
+  fileName?: string | File;
+  isDisabled?: boolean;
+  showFileName?: boolean;
 };
 
 const props = withDefaults(defineProps<PropTypes>(), {
   showFileName: true,
+  buttonText: "Upload",
 });
 
 const emit = defineEmits<{
