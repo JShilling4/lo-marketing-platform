@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from "vue";
+import { computed, onMounted, ref } from "vue";
 import AppButton from "./AppButton.vue";
 
 export type PropTypes = {
@@ -11,7 +11,7 @@ export type PropTypes = {
   showFileName?: boolean;
 };
 
-const props = withDefaults(defineProps<PropTypes>(), {
+withDefaults(defineProps<PropTypes>(), {
   showFileName: true,
   buttonText: "Upload",
 });

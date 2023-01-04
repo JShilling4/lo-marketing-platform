@@ -1,47 +1,72 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import TextInput from "../components/TextInput.vue";
-import AppButton from "../components/AppButton.vue";
 import { useRouter } from "vue-router";
+import { VForm } from "vuetify/components";
 
 const router = useRouter();
 
 interface IUserLogin {
-  username: string;
+  email: string;
   password: string;
   error: string;
 }
 
+const formRef = ref<HTMLFormElement | null>();
+const formIsValid = ref<boolean>(true);
+const emailRules = [
+  (v: string) => !!v || "E-mail is required",
+  (v: string) => /.+@.+\..+/.test(v) || "E-mail must be valid",
+];
+const passwordRules = [
+  (v: string) => !!v || "Password is required",
+  (v: string) => /.+@.+\..+/.test(v) || "Password must be valid",
+];
+
 const login = ref<IUserLogin>({
-  username: "",
+  email: "",
   password: "",
   error: "",
 });
 
 async function handleLogin() {
-  router.push("/library");
+  if (!formRef.value) return;
+  const { formIsValid } = await formRef.value.validate();
+
+  if (formIsValid) {
+    router.push("/library");
+  }
 }
 </script>
 
 <template>
   <div class="loginPage">
-    <!-- <img class="loginLogo" src="" alt="Marketing Logo" /> -->
-    <form @submit.prevent="handleLogin" class="loginForm">
+    <v-form
+      ref="formRef"
+      v-model="formIsValid"
+      class="loginForm"
+      lazy-validation
+    >
       <div class="form-group">
-        <label for="username">User Name</label>
-        <text-input v-model="login.username" type="text" name="username" />
+        <v-text-field
+          v-model="login.email"
+          label="Email"
+          :rules="emailRules"
+          required
+        />
       </div>
       <div class="form-group">
-        <label for="password">Password</label>
-        <text-input v-model="login.password" type="password" name="password" />
+        <v-text-field
+          v-model="login.password"
+          type="password"
+          label="Password"
+          :rules="passwordRules"
+          required
+        />
       </div>
-      <app-button type="submit" classes="btn btn-green">Log In</app-button>
-    </form>
-    <!-- <transition name="slide">
-      <div class="error" v-if="auth.status == 'error'">
-        {{ login.error }}
-      </div>
-    </transition> -->
+      <v-btn classes="btn btn-green" rounded="pill" @click="handleLogin"
+        >Log In</v-btn
+      >
+    </v-form>
   </div>
 </template>
 

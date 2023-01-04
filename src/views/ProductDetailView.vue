@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, toRaw } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useRouter, useRoute } from "vue-router";
 
-import { useProductStore } from "@/stores/products";
-import { useUserStore } from "@/stores/user";
+import { useProductStore } from "@/store";
+import { useUserStore } from "@/store";
 
 import StarRating from "@/components/StarRating.vue";
 import TextInput from "@/components/TextInput.vue";
@@ -26,7 +26,7 @@ const userStore = useUserStore();
 
 const product = ref<Product>({} as Product);
 const localOrder = ref<Order>({} as Order);
-const productDataLoaded = ref<boolean>(false);
+// const productDataLoaded = ref<boolean>(false);
 const selectedImageId = ref<string | null>(null);
 
 // computed

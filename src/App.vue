@@ -2,7 +2,7 @@
 import AppNavbar from "./components/AppNavbar.vue";
 import { computed } from "vue";
 import { RouterView } from "vue-router";
-import { useUserStore } from "./stores/user";
+import { useUserStore } from "./store";
 import { useRoute } from "vue-router";
 
 const route = useRoute();
