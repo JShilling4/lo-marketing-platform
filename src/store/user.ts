@@ -1,4 +1,4 @@
-import type { User } from "@/types/user";
+// import type { User } from "@/types/user";
 import { defineStore } from "pinia";
 import { user } from "./mockData";
 

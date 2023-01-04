@@ -4,7 +4,7 @@
 // import AppAvatar from "@/components/Shared/AppAvatar";
 import { computed, ref } from "vue";
 import type { User } from "@/types/user";
-import { useUserStore } from "../stores/user";
+import { useUserStore } from "../store";
 import AppAvatar from "./AppAvatar.vue";
 
 defineProps<{
