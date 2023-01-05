@@ -1,7 +1,5 @@
 <script setup lang="ts">
-// import { avatars } from "@/mixins";
 // import UserMenu from "@/components/Layout/UserMenu";
-// import AppAvatar from "@/components/Shared/AppAvatar";
 import { computed, ref } from "vue";
 import type { User } from "@/types/user";
 import { useUserStore } from "../store";
@@ -20,7 +18,7 @@ const userIsAdmin = computed(() => {
   try {
     return userStore.user.userRoles.includes("ROLE_MARKETING_EMPLOYEE");
   } catch (error) {
-    /* shhhh */
+    console.log(error);
   }
   return false;
 });
@@ -59,15 +57,15 @@ function toggleUserMenu() {
         <li class="nav__item" @click="mobileMenuShowing = false">
           <router-link to="/library" class="nav__link">Library</router-link>
         </li>
-        <!-- <li class="nav__item">
-            <router-link to="/discover" class="nav__link">Discover</router-link>
-          </li> -->
-        <!-- <li class="nav__item" @click="mobileMenuShowing = false">
-          <router-link to="/orders" class="nav__link">Orders</router-link>
+        <li class="nav__item">
+          <span to="/discover" class="nav__link">Discover</span>
         </li>
         <li class="nav__item" @click="mobileMenuShowing = false">
-          <router-link to="/resources" class="nav__link">Resources</router-link>
-        </li> -->
+          <span to="/orders" class="nav__link">Orders</span>
+        </li>
+        <li class="nav__item" @click="mobileMenuShowing = false">
+          <span to="/resources" class="nav__link">Resources</span>
+        </li>
       </ul>
       <div class="nav__avatar-wrapper">
         <app-avatar

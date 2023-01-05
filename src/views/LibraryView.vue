@@ -2,9 +2,9 @@
 import { onMounted, ref, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
 
-import { useProductStore } from "../stores/products";
-import { useCategoryStore } from "../stores/categories";
-import { useTopicStore } from "../stores/topics";
+import { useProductStore } from "../store";
+import { useCategoryStore } from "../store";
+import { useTopicStore } from "../store";
 
 import ProductCard from "@/components/ProductCard.vue";
 import StarRating from "@/components/StarRating.vue";

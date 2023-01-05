@@ -3,36 +3,33 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { VForm } from "vuetify/components";
 
+// dependencies
 const router = useRouter();
 
-interface IUserLogin {
-  email: string;
-  password: string;
-  error: string;
-}
+type UserLogin = {
+  email: "";
+  password: "";
+};
 
-const formRef = ref<HTMLFormElement | null>();
-const formIsValid = ref<boolean>(true);
+// data properties
+const formRef = ref<typeof VForm | null>();
+const valid = ref<boolean>(true);
 const emailRules = [
   (v: string) => !!v || "E-mail is required",
   (v: string) => /.+@.+\..+/.test(v) || "E-mail must be valid",
 ];
-const passwordRules = [
-  (v: string) => !!v || "Password is required",
-  (v: string) => /.+@.+\..+/.test(v) || "Password must be valid",
-];
-
-const login = ref<IUserLogin>({
+const passwordRules = [(v: string) => !!v || "Password is required"];
+const login = ref<UserLogin>({
   email: "",
   password: "",
-  error: "",
 });
 
-async function handleLogin() {
+// methods
+async function handleLogin(type: string) {
   if (!formRef.value) return;
-  const { formIsValid } = await formRef.value.validate();
+  const { valid } = await formRef.value.validate();
 
-  if (formIsValid) {
+  if (valid || type === "demo") {
     router.push("/library");
   }
 }
@@ -40,33 +37,33 @@ async function handleLogin() {
 
 <template>
   <div class="loginPage">
-    <v-form
-      ref="formRef"
-      v-model="formIsValid"
-      class="loginForm"
-      lazy-validation
-    >
-      <div class="form-group">
-        <v-text-field
-          v-model="login.email"
-          label="Email"
-          :rules="emailRules"
-          required
-        />
-      </div>
-      <div class="form-group">
-        <v-text-field
-          v-model="login.password"
-          type="password"
-          label="Password"
-          :rules="passwordRules"
-          required
-        />
-      </div>
-      <v-btn classes="btn btn-green" rounded="pill" @click="handleLogin"
-        >Log In</v-btn
-      >
-    </v-form>
+    <div class="login-form">
+      <v-form ref="formRef" v-model="valid" lazy-validation>
+        <div class="form-group">
+          <v-text-field
+            v-model="login.email"
+            label="Email"
+            :rules="emailRules"
+            variant="outlined"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <v-text-field
+            v-model="login.password"
+            type="password"
+            label="Password"
+            variant="outlined"
+            :rules="passwordRules"
+            required
+          />
+        </div>
+        <v-btn color="primary" @click="handleLogin">Log In</v-btn>
+        <v-btn color="secondary" @click="handleLogin('demo')"
+          >Demo as consumer</v-btn
+        >
+      </v-form>
+    </div>
   </div>
 </template>
 
@@ -80,21 +77,14 @@ async function handleLogin() {
   background-size: cover;
   background-repeat: no-repeat;
 }
-.loginLogo {
-  display: block;
-  margin: 0 auto 4rem;
-  max-width: 100%;
-}
-h2 {
-  margin-bottom: 4rem;
-}
-form {
+
+.login-form {
   position: absolute;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
   width: 37rem;
-  padding: 2rem 6rem 4rem;
+  padding: 4rem 6rem 4rem;
   border-radius: 5px;
   background-color: #fff;
   @include breakpoint(mobile) {
@@ -107,7 +97,7 @@ form {
   button {
     width: 100%;
     display: block;
-    margin: 3rem auto 0;
+    margin: 2rem auto 0;
   }
   .error {
     position: absolute;

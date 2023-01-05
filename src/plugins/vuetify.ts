@@ -2,7 +2,7 @@
  * Vuetify3 Plugin
  */
 import { aliases, mdi } from "vuetify/iconsets/mdi";
-import { createVuetify } from "vuetify";
+import { createVuetify, type ThemeDefinition } from "vuetify";
 
 // For test use. Do not include createVuetify()
 // see https://next.vuetifyjs.com/en/features/treeshaking/
@@ -17,6 +17,24 @@ import { en } from "vuetify/locale";
 // Styles
 import "vuetify/styles";
 import "@mdi/font/css/materialdesignicons.css";
+
+enum ThemeColors {
+  background = "#16af8c",
+  primary = "#16af8c",
+  secondary = "#142f42",
+  error = "#e83953",
+  success = "#00b84f",
+}
+
+const customTheme: ThemeDefinition = {
+  dark: false,
+  colors: {
+    background: ThemeColors.background,
+    primary: ThemeColors.primary,
+    secondary: ThemeColors.secondary,
+    error: ThemeColors.error,
+  },
+};
 
 export default createVuetify({
   // Global configuration
@@ -50,7 +68,10 @@ export default createVuetify({
   // Theme
   // https://next.vuetifyjs.com/en/features/theme/
   theme: {
-    defaultTheme: "light",
+    defaultTheme: "customTheme",
+    themes: {
+      customTheme,
+    },
   },
 });
 
