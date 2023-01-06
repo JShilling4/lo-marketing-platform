@@ -6,12 +6,10 @@ import { useProductStore } from "@/store";
 import { useUserStore } from "@/store";
 
 import StarRating from "@/components/StarRating.vue";
-import TextInput from "@/components/TextInput.vue";
 import TextArea from "@/components/TextArea.vue";
 import RadioInput from "@/components/RadioInput.vue";
 import SingleFileInput from "@/components/SingleFileInput.vue";
 import VueMultiselect from "vue-multiselect";
-import AppButton from "@/components/AppButton.vue";
 
 import type { Product } from "@/types/product";
 import type { Order } from "@/types/order";
@@ -248,10 +246,9 @@ onMounted(async () => {
               </label>
 
               <!-- Text Input -->
-              <text-input
+              <v-text-field
                 v-if="field.type == 'text'"
                 :placeholder="field.placeholder"
-                :field="field"
                 v-model="field.value"
               />
 
@@ -312,15 +309,13 @@ onMounted(async () => {
 
           <!-- CONTROLS -->
           <div class="button-group">
-            <app-button classes="btn btn-green" @click="placeOrder"
-              >Place Order</app-button
-            >
-            <app-button
-              classes="btn btn-black"
+            <v-btn color="primary" @click="placeOrder">Place Order</v-btn>
+            <v-btn
+              color="secondary"
               @click="
                 router.push({ path: '/library', query: { ...route.query } })
               "
-              >Cancel</app-button
+              >Cancel</v-btn
             >
           </div>
         </div>

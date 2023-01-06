@@ -2,20 +2,17 @@
 import { onMounted, ref, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
 
-import { useProductStore } from "../stores/products";
-import { useCategoryStore } from "../stores/categories";
-import { useTopicStore } from "../stores/topics";
+import { useProductStore } from "../store";
+import { useCategoryStore } from "../store";
+import { useTopicStore } from "../store";
 
 import ProductCard from "@/components/ProductCard.vue";
 import StarRating from "@/components/StarRating.vue";
-import ChipMarker from "@/components/ChipMarker.vue";
 import VueMultiselect from "vue-multiselect";
 
 import type { Topic } from "@/types/topic";
 import type { Product } from "../types/product";
 import type { Category } from "../types/category";
-// import infiniteScroll from "vue-infinite-scroll";
-// Vue.use(infiniteScroll);
 
 const router = useRouter();
 const route = useRoute();
@@ -31,7 +28,6 @@ const searchString = ref<string>("");
 const scrollerData = ref<Product[]>([]);
 const scrollSliceStart = ref<number>(0);
 const scrollSliceIncrement = ref<number>(10);
-// const scrollerIsBusy = ref<boolean>(false);
 const cardsAreLoading = ref<boolean>(false);
 const sortOptions = ["A-Z", "Z-A", "Most Popular"];
 const selectedSort = ref<string>("A-Z");
@@ -231,21 +227,26 @@ onMounted(async () => {
         <span
           v-if="selectedCategories.length + selectedTopics.length < 1"
           class="noTagsText"
-          >No tags selected.</span
         >
-        <chip-marker
+          No tags selected.
+        </span>
+        <v-chip
           v-for="(category, index) in selectedCategories"
           :key="`category${category.id}`"
-          :id="category.id"
-          :name="category.name"
-          @remove-chip="removeCategory(index)"
-        />
-        <chip-marker
+          closable
+          @click:close="removeCategory(index)"
+          class="ml-2"
+        >
+          {{ category.name }}
+        </v-chip>
+        <v-chip
           v-for="(topic, index) in selectedTopics"
           :key="`topic${topic.name}`"
           :name="topic.name"
           @remove-chip="removeTopic(index)"
-        />
+        >
+          {{ topic.name }}
+        </v-chip>
       </div>
     </div>
 

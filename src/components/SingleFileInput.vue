@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
-import AppButton from "./AppButton.vue";
 
 export type PropTypes = {
   buttonText?: string;
@@ -53,11 +52,9 @@ onMounted(() => {
 
 <template>
   <div class="upload-wrapper">
-    <app-button
-      classes="btn btn-orange"
-      @click="fileInputRef?.click()"
-      :text="buttonText"
-    />
+    <v-btn color="tertiary" @click="fileInputRef?.click()">
+      {{ buttonText }}
+    </v-btn>
     <input
       type="file"
       ref="fileInputRef"

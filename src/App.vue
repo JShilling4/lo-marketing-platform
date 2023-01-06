@@ -19,13 +19,6 @@ const route = useRoute();
 
 const userStore = useUserStore();
 
-// const loading = computed(() => {
-//   // if (this.auth.status == "loading") {
-//   // 	return true;
-//   // }
-//   return false;
-// });
-
 // const userIsAdmin = computed(() => {
 //   // try {
 //   // 	return this.users.activeUser.userRoles.includes(
@@ -38,14 +31,7 @@ const userStore = useUserStore();
 // });
 
 const navShouldShow = computed(() => {
-  if (
-    route.name !== "login" &&
-    route.name !== "catalogLogin" &&
-    route.name !== "orderProofs" &&
-    route.name !== "orderProof" &&
-    route.name !== "magazineSelection" &&
-    route.name !== "mobileHandoff"
-  ) {
+  if (route.path !== "/" && route.path !== "/login") {
     return true;
   }
   return false;
@@ -64,94 +50,6 @@ const navShouldShow = computed(() => {
 //   // return false;
 //   return true;
 // });
-
-// tokenExpiry() {
-// 	return this.auth.tokenExpiry;
-// },
-// sessionMinutes() {
-// 	return Math.floor((this.sessionTimer / 60) % 60);
-// },
-// sessionSeconds() {
-// 	const seconds = Math.floor(this.sessionTimer % 60);
-// 	if (seconds < 10) {
-// 		return `0${seconds}`;
-// 	}
-// 	return seconds;
-// },
-// sessionString() {
-// 	return `${this.sessionMinutes}:${this.sessionSeconds}`;
-// },
-
-// watch: {
-// 	tokenExpiry(value) {
-// 		if (value !== null) {
-// 			this.startTimer();
-// 		}
-// 	},
-// 	sessionTimer(value) {
-// 		if (value == 300 || value == 150 || value == 45) {
-// 			this.sessionExpiringShowing = true;
-// 		}
-// 		if (value <= 0) {
-// 			this.redirectToLogin();
-// 		}
-// 	},
-// },
-
-// function startTimer() {
-// 	clearInterval(this.timeInterval);
-// 	const expirationTime = Math.trunc(
-// 		new Date(this.tokenExpiry).getTime() / 1000
-// 	);
-// 	const now = Math.trunc(new Date().getTime() / 1000);
-// 	this.sessionTimer = expirationTime - now;
-// 	this.timeInterval = setInterval(() => {
-// 		this.sessionTimer -= 1;
-// 	}, 1000);
-// }
-
-// function closeSessionExpiring() {
-// 	this.sessionExpiringShowing = false;
-// }
-
-// function redirectToLogin() {
-// 	this.sessionExpiringShowing = false;
-// 	if (this.$router.currentRoute.path !== "/login") {
-// 		this.$router.push({
-// 			path: "/login",
-// 			query: {
-// 				...this.$route.query,
-// 				returnUrl: this.$router.currentRoute.path,
-// 			},
-// 		});
-// 	}
-// }
-
-// async beforeCreate() {
-// 	if (
-// 		this.$route.name !== "login" &&
-// 		this.$route.name !== "magazineSelection" &&
-// 		this.$route.name !== "catalogLogin" &&
-// 		this.$route.name !== "mobileHandoff"
-// 	) {
-// 		const user = JSON.parse(localStorage.getItem("mv3"));
-// 		if (user) {
-// 			await this.$store.dispatch("validateToken");
-// 			await this.$store.dispatch("setActiveUser", user);
-// 			this.updateActiveUser(user.employeeNumber);
-// 			this.startSession();
-// 			this.startTimer();
-// 		} else {
-// 			this.$router.push("/login");
-// 		}
-// 	}
-// },
-
-// created() {},
-
-// beforeDestroy() {
-// 	clearInterval(this.timeInterval);
-// },
 </script>
 
 <template>
@@ -166,17 +64,6 @@ const navShouldShow = computed(() => {
 
     <app-navbar v-if="navShouldShow" :activeUser="userStore.user" />
 
-    <!-- <session-expiring-modal
-      v-if="
-        sessionExpiringShowing &&
-        !loading &&
-        auth.tokenExpiry !== null &&
-        $router.currentRoute.path !== '/login'
-      "
-      :session-timer="sessionString"
-      @close="sessionExpiringShowing = false"
-    /> -->
-
     <div class="view">
       <router-view></router-view>
     </div>
@@ -184,6 +71,7 @@ const navShouldShow = computed(() => {
 </template>
 
 <style lang="scss">
+@import "./assets/scss/main.scss";
 @import "./assets/scss/vendor/multiselect.scss";
 </style>
 
@@ -196,31 +84,6 @@ header {
 .logo {
   display: block;
   margin: 0 auto 2rem;
-}
-
-nav {
-  width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
-}
-
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
-
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
-
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
-
-nav a:first-of-type {
-  border: 0;
 }
 
 @media (min-width: 1024px) {
