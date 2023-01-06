@@ -8,7 +8,6 @@ import { useTopicStore } from "../store";
 
 import ProductCard from "@/components/ProductCard.vue";
 import StarRating from "@/components/StarRating.vue";
-import VueMultiselect from "vue-multiselect";
 
 import type { Topic } from "@/types/topic";
 import type { Product } from "@/types/product";
@@ -233,66 +232,42 @@ onMounted(async () => {
         <!-- Category -->
         <div class="form-group">
           <div class="multiselect-wrapper --library">
-            <vue-multiselect
+            <v-select
               v-model="selectedCategories"
-              :multiple="true"
-              track-by="id"
-              label="name"
-              selectLabel=""
-              selectedLabel=""
-              placeholder="Categories"
-              deselectLabel=""
-              :close-on-select="false"
-              :preserve-search="true"
-              :options="categoryStore.allCategories"
+              :items="categoryStore.allCategories"
+              multiple
+              item-title="name"
+              item-value="name"
+              label="Categories"
+              return-object
             >
-              <template v-slot:selection="{ values, isOpen }">
-                <span
-                  class="multiselect__single"
-                  v-if="values.length && !isOpen"
-                >
-                  {{ values.length }} categor{{
-                    values.length > 1 ? "ies" : "y"
-                  }}
-                  selected
+              <template v-slot:selection="{ index }">
+                <span class="multiselect__single" v-if="index < 1">
+                  {{ selectedCategories.length }} selected
                 </span>
               </template>
-
-              <template v-slot:tag><span></span></template>
-            </vue-multiselect>
+            </v-select>
           </div>
         </div>
 
         <!-- Topics -->
         <div class="form-group">
           <div class="multiselect-wrapper --library">
-            <vue-multiselect
+            <v-select
               v-model="selectedTopics"
-              :multiple="true"
-              track-by="name"
-              label="name"
-              placeholder="Topics"
-              selectLabel=""
-              selectedLabel=""
-              deselectLabel=""
-              :close-on-select="false"
-              :preserve-search="true"
-              :options="topicStore.allTopics"
+              :items="topicStore.allTopics"
+              multiple
+              item-title="name"
+              item-value="name"
+              label="Topics"
+              return-object
             >
-              <template v-slot:selection="{ values, isOpen }">
-                <span
-                  class="multiselect__single"
-                  v-if="values.length && !isOpen"
-                >
-                  {{ values.length }} topic<span v-if="values.length > 1">
-                    s
-                  </span>
-                  selected
+              <template v-slot:selection="{ index }">
+                <span class="multiselect__single" v-if="index < 1">
+                  {{ selectedTopics.length }} selected
                 </span>
               </template>
-
-              <template v-slot:tag><span></span></template>
-            </vue-multiselect>
+            </v-select>
           </div>
         </div>
       </div>
@@ -311,15 +286,11 @@ onMounted(async () => {
       <!-- Sort -->
       <div class="multiselect-wrapper sortControl">
         <div class="form-group">
-          <vue-multiselect
+          <v-select
             v-model="selectedSort"
-            :options="sortOptions"
-            placeholder="Sort"
-            label=""
-            selectLabel=""
-            selectedLabel=""
-            deselectLabel=""
-          />
+            :items="sortOptions"
+            label="Sort"
+          ></v-select>
         </div>
       </div>
     </div>

@@ -72,7 +72,6 @@ const navShouldShow = computed(() => {
 
 <style lang="scss">
 @import "./assets/scss/main.scss";
-@import "./assets/scss/vendor/multiselect.scss";
 </style>
 
 <style lang="scss" scoped>
