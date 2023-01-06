@@ -79,7 +79,6 @@ function checkOverflow() {
     margin: 0 auto;
     object-fit: cover;
     height: var(--prodCard-height);
-    border: 1px solid white;
   }
 
   &:before {

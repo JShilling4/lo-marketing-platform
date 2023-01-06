@@ -570,7 +570,7 @@ export const user: User = {
   position: "Marketing Specialist",
   email: "jsmith@company.com",
   nmls: null,
-  userRoles: ["ROLE_MARKETING_EMPLOYEE"],
+  userRoles: ["ROLE_EMPLOYEE"],
   cellPhone: "555-555-5555",
   token: "oijweh0-9u-rw9ujrwp0j",
   tokenExpiration: "",
