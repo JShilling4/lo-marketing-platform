@@ -11,8 +11,8 @@ import StarRating from "@/components/StarRating.vue";
 import VueMultiselect from "vue-multiselect";
 
 import type { Topic } from "@/types/topic";
-import type { Product } from "../types/product";
-import type { Category } from "../types/category";
+import type { Product } from "@/types/product";
+import type { Category } from "@/types/category";
 
 const router = useRouter();
 const route = useRoute();
@@ -25,9 +25,6 @@ const filteredProducts = ref<Product[]>([]);
 const selectedCategories = ref<Category[]>([]);
 const selectedTopics = ref<Topic[]>([]);
 const searchString = ref<string>("");
-const scrollerData = ref<Product[]>([]);
-const scrollSliceStart = ref<number>(0);
-const scrollSliceIncrement = ref<number>(10);
 const cardsAreLoading = ref<boolean>(false);
 const sortOptions = ["A-Z", "Z-A", "Most Popular"];
 const selectedSort = ref<string>("A-Z");
@@ -45,7 +42,6 @@ watch(selectedSort, () => {
 });
 
 function filterProducts() {
-  scrollerData.value = []; // reset the virtual scroller
   filteredProducts.value = JSON.parse(
     JSON.stringify([...productStore.allActiveProducts])
   ); // reset to starting dataset
@@ -83,8 +79,6 @@ function filterProducts() {
       return b.rating > a.rating ? 1 : -1;
     });
   }
-  scrollSliceStart.value = 0;
-  loadMoreCards();
 }
 
 function appendCategoryQueryString() {
@@ -138,17 +132,6 @@ function searchByString() {
   filterProducts();
 }
 
-function loadMoreCards() {
-  const page = filteredProducts.value.slice(
-    scrollSliceStart.value,
-    scrollSliceStart.value + scrollSliceIncrement.value
-  );
-  page.forEach((product) => {
-    scrollerData.value.push(product);
-  });
-  scrollSliceStart.value += scrollSliceIncrement.value;
-}
-
 function filterByQueryString(
   queryCategories: any,
   queryTopics: any,
@@ -194,8 +177,6 @@ onMounted(async () => {
       (product: any) => product.isActive == 1
     );
     if (!queryStringPresent) {
-      loadMoreCards();
-    } else {
       filterByQueryString(queryCategories, queryTopics, querySearch);
     }
   }
@@ -205,10 +186,6 @@ onMounted(async () => {
 
   if (!queryStringPresent) {
     filterProducts();
-    // set up virtual scroller
-    scrollSliceStart.value = 0;
-    scrollerData.value = [];
-    loadMoreCards();
   } else {
     filterByQueryString(queryCategories, queryTopics, querySearch);
   }
@@ -242,8 +219,9 @@ onMounted(async () => {
         <v-chip
           v-for="(topic, index) in selectedTopics"
           :key="`topic${topic.name}`"
-          :name="topic.name"
-          @remove-chip="removeTopic(index)"
+          closable
+          @click:close="removeTopic(index)"
+          class="ml-2"
         >
           {{ topic.name }}
         </v-chip>
@@ -350,7 +328,7 @@ onMounted(async () => {
     <div>
       <transition-group tag="div" name="list" class="cardRow">
         <div
-          v-for="product in scrollerData"
+          v-for="product in filteredProducts"
           :key="product.id"
           class="cardContainer"
         >
@@ -375,7 +353,10 @@ onMounted(async () => {
     </div>
 
     <!-- <loading-dots v-if="cardsAreLoading" loading-text="Loading products" /> -->
-    <div v-if="!cardsAreLoading && scrollerData.length < 1" class="noResults">
+    <div
+      v-if="!cardsAreLoading && filteredProducts.length < 1"
+      class="noResults"
+    >
       There are no products that match your search.
     </div>
   </div>
