@@ -6,8 +6,8 @@ import { createVuetify, type ThemeDefinition } from "vuetify";
 
 // For test use. Do not include createVuetify()
 // see https://next.vuetifyjs.com/en/features/treeshaking/
-import * as components from "vuetify/components";
-import * as directives from "vuetify/directives";
+// import * as components from "vuetify/components";
+// import * as directives from "vuetify/directives";
 
 // Translations provided by Vuetify
 import { en } from "vuetify/locale";
@@ -76,4 +76,4 @@ export default createVuetify({
 });
 
 // Export for test.
-export { components, directives };
+// export { components, directives };

@@ -1,25 +1,21 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
-
-import { useProductStore } from "../store";
-import { useCategoryStore } from "../store";
-import { useTopicStore } from "../store";
-
+import { useProductStore, useCategoryStore, useTopicStore } from "@/store";
 import ProductCard from "@/components/ProductCard.vue";
 import StarRating from "@/components/StarRating.vue";
-
 import type { Topic } from "@/types/topic";
 import type { Product } from "@/types/product";
 import type { Category } from "@/types/category";
 
+// Dependencies
 const router = useRouter();
 const route = useRoute();
-
 const productStore = useProductStore();
 const categoryStore = useCategoryStore();
 const topicStore = useTopicStore();
 
+// Data Properties
 const filteredProducts = ref<Product[]>([]);
 const selectedCategories = ref<Category[]>([]);
 const selectedTopics = ref<Topic[]>([]);
@@ -28,6 +24,7 @@ const cardsAreLoading = ref<boolean>(false);
 const sortOptions = ["A-Z", "Z-A", "Most Popular"];
 const selectedSort = ref<string>("A-Z");
 
+// Watchers
 watch(selectedCategories, () => {
   appendCategoryQueryString();
   filterProducts();
@@ -40,6 +37,7 @@ watch(selectedSort, () => {
   filterProducts();
 });
 
+// Methods
 function filterProducts() {
   filteredProducts.value = JSON.parse(
     JSON.stringify([...productStore.allActiveProducts])
@@ -159,6 +157,7 @@ function filterByQueryString(
   cardsAreLoading.value = false;
 }
 
+// Lifecycle Hooks
 onMounted(async () => {
   window.scrollTo(0, 0);
   // read query strings and handle filters as needed
@@ -380,25 +379,10 @@ onMounted(async () => {
     flex-wrap: wrap;
     height: unset;
   }
-  .form-group {
-    margin-bottom: 0;
-    @include breakpoint(tablet-port) {
-      margin-bottom: 1rem;
-    }
-  }
+
   .multiselect-wrapper {
     width: 17rem;
-    margin-right: 1rem;
-    label {
-      color: var(--orange);
-    }
-    :deep(.multiselect__content-wrapper) {
-      width: 17rem;
-    }
-    :deep(.multiselect__single) {
-      /* color: var(--orange); */
-      font-weight: 800;
-    }
+    margin-right: 2rem;
   }
   .tagFilter-container {
     display: flex;
@@ -471,21 +455,11 @@ onMounted(async () => {
     margin-top: 0.5rem;
     display: flex;
     align-items: center;
-
-    .orderBtn {
-      display: inline-block;
-      font-size: 1.3rem;
-      margin-right: 1.5rem;
-    }
   }
 }
 .emptyRowFiller {
   width: var(--prodCardContainer-width);
   height: 0;
   margin: 0 auto;
-}
-
-:deep(p.loading) {
-  text-align: left;
 }
 </style>

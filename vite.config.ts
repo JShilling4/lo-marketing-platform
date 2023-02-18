@@ -1,6 +1,4 @@
 import { defineConfig, type UserConfig } from "vite";
-import { visualizer } from "rollup-plugin-visualizer";
-import { checker } from "vite-plugin-checker";
 import vue from "@vitejs/plugin-vue";
 import vuetify, { transformAssetUrls } from "vite-plugin-vuetify";
 import { fileURLToPath, URL } from "node:url";
@@ -11,7 +9,7 @@ import { fileURLToPath, URL } from "node:url";
  *
  * @see {@link https://vitejs.dev/config/}
  */
-export default defineConfig(async ({ command, mode }): Promise<UserConfig> => {
+export default defineConfig(async ({ command }): Promise<UserConfig> => {
   const config: UserConfig = {
     // https://vitejs.dev/config/shared-options.html#base
     base: "./",
@@ -27,34 +25,31 @@ export default defineConfig(async ({ command, mode }): Promise<UserConfig> => {
       }),
       // Vuetify Loader
       // https://github.com/vuetifyjs/vuetify-loader/tree/next/packages/vite-plugin#vite-plugin-vuetify
-      vuetify({
-        autoImport: true,
-        // styles: { configFile: "src/assets/scss/vendor/settings.scss" },
-      }),
+      vuetify(),
       // vite-plugin-checker
       // https://github.com/fi3ework/vite-plugin-checker
-      checker({
-        typescript: true,
-        vueTsc: true,
-        eslint: {
-          lintCommand:
-            "eslint . --fix --cache --cache-location ./node_modules/.vite/vite-plugin-eslint", // for example, lint .ts & .tsx
-        },
-      }),
+      // checker({
+      //   typescript: true,
+      //   vueTsc: true,
+      //   eslint: {
+      //     lintCommand:
+      //       "eslint . --fix --cache --cache-location ./node_modules/.vite/vite-plugin-eslint", // for example, lint .ts & .tsx
+      //   },
+      // }),
     ],
     // https://vitejs.dev/config/server-options.html
     server: {
-      fs: {
-        // Allow serving files from one level up to the project root
-        allow: [".."],
-      },
+      // fs: {
+      //   // Allow serving files from one level up to the project root
+      //   allow: [".."],
+      // },
     },
     // Resolver
     resolve: {
       // https://vitejs.dev/config/shared-options.html#resolve-alias
       alias: {
         "@": fileURLToPath(new URL("./src", import.meta.url)),
-        "~": fileURLToPath(new URL("./node_modules", import.meta.url)),
+        // "~": fileURLToPath(new URL("./node_modules", import.meta.url)),
       },
       extensions: [".js", ".json", ".jsx", ".mjs", ".ts", ".tsx", ".vue"],
     },
@@ -74,7 +69,7 @@ export default defineConfig(async ({ command, mode }): Promise<UserConfig> => {
         output: {
           manualChunks: {
             // Split external library from transpiled code.
-            vue: ["vue", "vue-router", "pinia", "pinia-plugin-persistedstate"],
+            vue: ["vue", "vue-router", "pinia"],
             vuetify: [
               "vuetify",
               "vuetify/components",
@@ -84,14 +79,14 @@ export default defineConfig(async ({ command, mode }): Promise<UserConfig> => {
             materialdesignicons: ["@mdi/font/css/materialdesignicons.css"],
           },
           plugins: [
-            mode === "analyze"
-              ? // rollup-plugin-visualizer
-                // https://github.com/btd/rollup-plugin-visualizer
-                visualizer({
-                  open: true,
-                  filename: "dist/stats.html",
-                })
-              : undefined,
+            // mode === "analyze"
+            //   ? // rollup-plugin-visualizer
+            //     // https://github.com/btd/rollup-plugin-visualizer
+            //     visualizer({
+            //       open: true,
+            //       filename: "dist/stats.html",
+            //     })
+            //   : undefined,
             /*
             // if you use Code encryption by rollup-plugin-obfuscator
             // https://github.com/getkey/rollup-plugin-obfuscator
