@@ -1,37 +1,30 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
-
-import { useProductStore } from "../store";
-import { useCategoryStore } from "../store";
-import { useTopicStore } from "../store";
-
+import { useProductStore, useCategoryStore, useTopicStore } from "@/store";
 import ProductCard from "@/components/ProductCard.vue";
 import StarRating from "@/components/StarRating.vue";
-import VueMultiselect from "vue-multiselect";
-
 import type { Topic } from "@/types/topic";
-import type { Product } from "../types/product";
-import type { Category } from "../types/category";
+import type { Product } from "@/types/product";
+import type { Category } from "@/types/category";
 
+// Dependencies
 const router = useRouter();
 const route = useRoute();
-
 const productStore = useProductStore();
 const categoryStore = useCategoryStore();
 const topicStore = useTopicStore();
 
+// Data Properties
 const filteredProducts = ref<Product[]>([]);
 const selectedCategories = ref<Category[]>([]);
 const selectedTopics = ref<Topic[]>([]);
 const searchString = ref<string>("");
-const scrollerData = ref<Product[]>([]);
-const scrollSliceStart = ref<number>(0);
-const scrollSliceIncrement = ref<number>(10);
 const cardsAreLoading = ref<boolean>(false);
 const sortOptions = ["A-Z", "Z-A", "Most Popular"];
 const selectedSort = ref<string>("A-Z");
 
+// Watchers
 watch(selectedCategories, () => {
   appendCategoryQueryString();
   filterProducts();
@@ -44,8 +37,8 @@ watch(selectedSort, () => {
   filterProducts();
 });
 
+// Methods
 function filterProducts() {
-  scrollerData.value = []; // reset the virtual scroller
   filteredProducts.value = JSON.parse(
     JSON.stringify([...productStore.allActiveProducts])
   ); // reset to starting dataset
@@ -83,8 +76,6 @@ function filterProducts() {
       return b.rating > a.rating ? 1 : -1;
     });
   }
-  scrollSliceStart.value = 0;
-  loadMoreCards();
 }
 
 function appendCategoryQueryString() {
@@ -138,17 +129,6 @@ function searchByString() {
   filterProducts();
 }
 
-function loadMoreCards() {
-  const page = filteredProducts.value.slice(
-    scrollSliceStart.value,
-    scrollSliceStart.value + scrollSliceIncrement.value
-  );
-  page.forEach((product) => {
-    scrollerData.value.push(product);
-  });
-  scrollSliceStart.value += scrollSliceIncrement.value;
-}
-
 function filterByQueryString(
   queryCategories: any,
   queryTopics: any,
@@ -177,6 +157,7 @@ function filterByQueryString(
   cardsAreLoading.value = false;
 }
 
+// Lifecycle Hooks
 onMounted(async () => {
   window.scrollTo(0, 0);
   // read query strings and handle filters as needed
@@ -194,8 +175,6 @@ onMounted(async () => {
       (product: any) => product.isActive == 1
     );
     if (!queryStringPresent) {
-      loadMoreCards();
-    } else {
       filterByQueryString(queryCategories, queryTopics, querySearch);
     }
   }
@@ -205,10 +184,6 @@ onMounted(async () => {
 
   if (!queryStringPresent) {
     filterProducts();
-    // set up virtual scroller
-    scrollSliceStart.value = 0;
-    scrollerData.value = [];
-    loadMoreCards();
   } else {
     filterByQueryString(queryCategories, queryTopics, querySearch);
   }
@@ -242,8 +217,9 @@ onMounted(async () => {
         <v-chip
           v-for="(topic, index) in selectedTopics"
           :key="`topic${topic.name}`"
-          :name="topic.name"
-          @remove-chip="removeTopic(index)"
+          closable
+          @click:close="removeTopic(index)"
+          class="ml-2"
         >
           {{ topic.name }}
         </v-chip>
@@ -255,66 +231,42 @@ onMounted(async () => {
         <!-- Category -->
         <div class="form-group">
           <div class="multiselect-wrapper --library">
-            <vue-multiselect
+            <v-select
               v-model="selectedCategories"
-              :multiple="true"
-              track-by="id"
-              label="name"
-              selectLabel=""
-              selectedLabel=""
-              placeholder="Categories"
-              deselectLabel=""
-              :close-on-select="false"
-              :preserve-search="true"
-              :options="categoryStore.allCategories"
+              :items="categoryStore.allCategories"
+              multiple
+              item-title="name"
+              item-value="name"
+              label="Categories"
+              return-object
             >
-              <template v-slot:selection="{ values, isOpen }">
-                <span
-                  class="multiselect__single"
-                  v-if="values.length && !isOpen"
-                >
-                  {{ values.length }} categor{{
-                    values.length > 1 ? "ies" : "y"
-                  }}
-                  selected
+              <template v-slot:selection="{ index }">
+                <span class="multiselect__single" v-if="index < 1">
+                  {{ selectedCategories.length }} selected
                 </span>
               </template>
-
-              <template v-slot:tag><span></span></template>
-            </vue-multiselect>
+            </v-select>
           </div>
         </div>
 
         <!-- Topics -->
         <div class="form-group">
           <div class="multiselect-wrapper --library">
-            <vue-multiselect
+            <v-select
               v-model="selectedTopics"
-              :multiple="true"
-              track-by="name"
-              label="name"
-              placeholder="Topics"
-              selectLabel=""
-              selectedLabel=""
-              deselectLabel=""
-              :close-on-select="false"
-              :preserve-search="true"
-              :options="topicStore.allTopics"
+              :items="topicStore.allTopics"
+              multiple
+              item-title="name"
+              item-value="name"
+              label="Topics"
+              return-object
             >
-              <template v-slot:selection="{ values, isOpen }">
-                <span
-                  class="multiselect__single"
-                  v-if="values.length && !isOpen"
-                >
-                  {{ values.length }} topic<span v-if="values.length > 1">
-                    s
-                  </span>
-                  selected
+              <template v-slot:selection="{ index }">
+                <span class="multiselect__single" v-if="index < 1">
+                  {{ selectedTopics.length }} selected
                 </span>
               </template>
-
-              <template v-slot:tag><span></span></template>
-            </vue-multiselect>
+            </v-select>
           </div>
         </div>
       </div>
@@ -333,15 +285,11 @@ onMounted(async () => {
       <!-- Sort -->
       <div class="multiselect-wrapper sortControl">
         <div class="form-group">
-          <vue-multiselect
+          <v-select
             v-model="selectedSort"
-            :options="sortOptions"
-            placeholder="Sort"
-            label=""
-            selectLabel=""
-            selectedLabel=""
-            deselectLabel=""
-          />
+            :items="sortOptions"
+            label="Sort"
+          ></v-select>
         </div>
       </div>
     </div>
@@ -350,7 +298,7 @@ onMounted(async () => {
     <div>
       <transition-group tag="div" name="list" class="cardRow">
         <div
-          v-for="product in scrollerData"
+          v-for="product in filteredProducts"
           :key="product.id"
           class="cardContainer"
         >
@@ -375,7 +323,10 @@ onMounted(async () => {
     </div>
 
     <!-- <loading-dots v-if="cardsAreLoading" loading-text="Loading products" /> -->
-    <div v-if="!cardsAreLoading && scrollerData.length < 1" class="noResults">
+    <div
+      v-if="!cardsAreLoading && filteredProducts.length < 1"
+      class="noResults"
+    >
       There are no products that match your search.
     </div>
   </div>
@@ -428,25 +379,10 @@ onMounted(async () => {
     flex-wrap: wrap;
     height: unset;
   }
-  .form-group {
-    margin-bottom: 0;
-    @include breakpoint(tablet-port) {
-      margin-bottom: 1rem;
-    }
-  }
+
   .multiselect-wrapper {
     width: 17rem;
-    margin-right: 1rem;
-    label {
-      color: var(--orange);
-    }
-    :deep(.multiselect__content-wrapper) {
-      width: 17rem;
-    }
-    :deep(.multiselect__single) {
-      /* color: var(--orange); */
-      font-weight: 800;
-    }
+    margin-right: 2rem;
   }
   .tagFilter-container {
     display: flex;
@@ -519,21 +455,11 @@ onMounted(async () => {
     margin-top: 0.5rem;
     display: flex;
     align-items: center;
-
-    .orderBtn {
-      display: inline-block;
-      font-size: 1.3rem;
-      margin-right: 1.5rem;
-    }
   }
 }
 .emptyRowFiller {
   width: var(--prodCardContainer-width);
   height: 0;
   margin: 0 auto;
-}
-
-:deep(p.loading) {
-  text-align: left;
 }
 </style>

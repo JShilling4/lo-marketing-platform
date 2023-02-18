@@ -27,8 +27,15 @@ const login = ref<UserLogin>({
 // methods
 async function handleLogin(type: string) {
   if (!formRef.value) return;
-  const { valid } = await formRef.value.validate();
 
+  // demo entry
+  if (type === "demo") {
+    router.push("/library");
+    return;
+  }
+
+  // regular entry
+  const { valid } = await formRef.value.validate();
   if (valid || type === "demo") {
     router.push("/library");
   }
@@ -43,8 +50,8 @@ async function handleLogin(type: string) {
           <v-text-field
             v-model="login.email"
             label="Email"
-            :rules="emailRules"
             variant="outlined"
+            :rules="emailRules"
             required
           />
         </div>

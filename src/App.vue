@@ -70,11 +70,6 @@ const navShouldShow = computed(() => {
   </div>
 </template>
 
-<style lang="scss">
-@import "./assets/scss/main.scss";
-@import "./assets/scss/vendor/multiselect.scss";
-</style>
-
 <style lang="scss" scoped>
 header {
   line-height: 1.5;
